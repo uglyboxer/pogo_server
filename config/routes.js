@@ -33,16 +33,15 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': {
-    view: 'homepage',
+    view: 'welcome',
   },
-  'get /login': { view: 'user/login' },
-  'get /signup': { view: 'user/signup' },
-  '/welcome': { view: 'user/welcome' },
+  '/lounge': {view: 'homepage'},
   'post /login': 'AuthController.login',
   'post /signup': 'UserController.signup',
   '/logout': 'AuthController.logout',
   'post /room/:roomId/users': 'RoomController.join',
-  'delete /room/:roomId/users': 'RoomController.leave'
+  'delete /room/:roomId/users': 'RoomController.leave',
+
 
   /***************************************************************************
   *                                                                          *

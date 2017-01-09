@@ -8,7 +8,6 @@
 
 // Attach a listener which fires when a connection is established:
 io.socket.on('connect', function socketConnected() {
-
     // Show the main UI
     $('#disconnect').hide();
     $('#main').show();

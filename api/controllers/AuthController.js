@@ -5,6 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+var passport = require('passport');
+
 module.exports = {
     _config: {
         actions: false,
@@ -23,10 +25,7 @@ module.exports = {
             }
             req.logIn(user, function(err) {
                 if (err) res.send(err);
-                return res.send({
-                    message: info.message,
-                    user: user
-                });
+                return res.redirect('/lounge');
             });
 
         })(req, res);

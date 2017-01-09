@@ -8,21 +8,6 @@
 module.exports = {
 
     /**
-     * `UserController.login()`
-     */
-    login: function(req, res) {
-        return res.login({
-            successRedirect: '/'
-        });
-    },
-    /**
-     * `UserController.logout()`
-     */
-    logout: function(req, res) {
-        req.logout();
-        return res.ok('Logged out successfully.');
-    },
-    /**
      * `UserController.signup()`
      */
     signup: function(req, res) {
@@ -31,18 +16,11 @@ module.exports = {
             if (err) return res.negotiate(err);
             req.login(user, function(err) {
                 if (err) return res.negotiate(err);
-                return res.redirect('/welcome');
+                return res.redirect('/');
             });
         });
     },
-    create: function(req, res) {
-        var params = req.params.all();
-        User.create({ name: params.name }).exec(function createCB(err, created) {
-            return res.json({
-                notice: 'Created user with name ' + created.name
-            });
-        });
-    },
+
     announce: function(req, res) {
 
         // Get the socket ID from the reauest

@@ -13,15 +13,15 @@ passport.deserializeUser(function(id, done) {
 });
 
 passport.use(new LocalStrategy({
-    usernameField: 'email',
+    usernameField: 'username',
     passwordField: 'password'
   },
-  function(email, password, done) {
+  function(username, password, done) {
 
-    User.findOne({ email: email }, function (err, user) {
+    User.findOne({ username: username }, function (err, user) {
       if (err) { return done(err); }
       if (!user) {
-        return done(null, false, { message: 'Incorrect email.' });
+        return done(null, false, { message: 'Incorrect username.' });
       }
 
       bcrypt.compare(password, user.password, function (err, res) {
@@ -30,7 +30,7 @@ passport.use(new LocalStrategy({
               message: 'Invalid Password'
             });
           var returnUser = {
-            email: user.email,
+            username: user.username,
             createdAt: user.createdAt,
             id: user.id
           };
