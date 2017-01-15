@@ -34,6 +34,9 @@ module.exports.routes = {
 
   '/': {
     view: 'welcome',
+    locals: {
+      layout: 'entry'
+    }
   },
   '/lounge': {view: 'homepage'},
   'post /login': 'AuthController.login',

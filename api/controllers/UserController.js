@@ -25,17 +25,13 @@ module.exports = {
 
         // Get the socket ID from the reauest
         var socketId = sails.sockets.getId(req);
-
         // Get the session from the request
         var session = req.session;
-
+        var userId = session.passport.user;
         // Create the session.users hash if it doesn't exist already
         session.users = session.users || {};
-
-        User.create({
-            name: 'unknown',
-            socketId: socketId
-        }).exec(function(err, user) {
+        // User.create({
+        User.findOne({ id: userId }).exec(function(err, user) {
             if (err) {
                 return res.serverError(err);
             }
@@ -51,16 +47,16 @@ module.exports = {
             // between users.
             User.subscribe(req, user, 'message');
 
-            // Get updates about users being created
+            //     // Get updates about users being created
             User.watch(req);
 
-            // Get updates about rooms being created
+            //     // Get updates about rooms being created
             Room.watch(req);
 
-            // Publish this user creation event to every socket watching the User model via User.watch()
+            //     // Publish this user creation event to every socket watching the User model via User.watch()
             User.publishCreate(user, req);
 
-            res.json(user);
+            return res.json(user);
 
         });
 

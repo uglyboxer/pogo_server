@@ -16,6 +16,8 @@ io.socket.on('connect', function socketConnected() {
     // this also causes the CREATION of the user, so each window/tab is a new user.
     io.socket.get("/user/announce", function(data){
       window.me = data;
+      console.log(data);
+      console.log('YO');
       updateMyName(data);
 
       // Get the current list of users online.  This will also subscribe us to
