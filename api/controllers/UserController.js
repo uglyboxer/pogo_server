@@ -55,6 +55,7 @@ module.exports = {
 
             //     // Publish this user creation event to every socket watching the User model via User.watch()
             User.publishCreate(user, req);
+            console.log(user, ' logged in.');
 
             return res.json(user);
 

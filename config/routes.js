@@ -35,7 +35,7 @@ module.exports.routes = {
   '/': {
     view: 'welcome',
     locals: {
-      layout: 'entry'
+      layout: 'sockets'
     }
   },
   '/lounge': {view: 'homepage'},

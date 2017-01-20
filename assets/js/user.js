@@ -1,6 +1,6 @@
 // Update the value in the user name input.
 function updateMyName(me) {
-  $('#my-name').val(me.name == 'unknown' ? 'User #' + me.id : me.name);
+  $('#my-name').val(me.username == 'unknown' ? 'User #' + me.id : me.username);
 }
 
 // Update the current user's username
@@ -16,7 +16,7 @@ function addUser(user) {
   var select = $('#users-list');
 
   // Create a new <option> for the <select> with the new user's information
-  var option = $('<option id="'+"user-"+user.id+'" value="'+user.id+'">'+(user.name == "unknown" ? "User #" + user.id : user.name)+'</option>');
+  var option = $('<option id="'+"user-"+user.id+'" value="'+user.id+'">'+(user.username == "unknown" ? "User #" + user.id : user.username)+'</option>');
 
   // Add the new <option> element
   select.append(option);
