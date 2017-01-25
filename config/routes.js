@@ -41,7 +41,7 @@ module.exports.routes = {
   '/lounge': {view: 'homepage'},
   'post /login': 'AuthController.login',
   'post /signup': 'UserController.signup',
-  '/logout': 'AuthController.logout',
+  // 'post /logout': 'UserController.logout',
   'post /room/:roomId/users': 'RoomController.join',
   'delete /room/:roomId/users': 'RoomController.leave',
 

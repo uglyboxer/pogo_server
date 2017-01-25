@@ -30,6 +30,7 @@ module.exports = {
         var userId = session.passport.user;
         // Create the session.users hash if it doesn't exist already
         session.users = session.users || {};
+        console.log(session.users);
         // User.create({
         User.findOne({ id: userId }).exec(function(err, user) {
             if (err) {
@@ -45,7 +46,7 @@ module.exports = {
             // user changing their name or being destroyed, ONLY this particular socket
             // will receive "message" events.  This allows us to send private messages
             // between users.
-            User.subscribe(req, user, 'message');
+            User.subscribe(req.socket, user, 'message');
 
             //     // Get updates about users being created
             User.watch(req);
@@ -54,12 +55,27 @@ module.exports = {
             Room.watch(req);
 
             //     // Publish this user creation event to every socket watching the User model via User.watch()
-            User.publishCreate(user, req);
+            User.publishCreate(user);
             console.log(user, ' logged in.');
 
             return res.json(user);
 
         });
+
+    },
+
+    logout: function(req, res) {
+              // Get the socket ID from the reauest
+        var socketId = sails.sockets.getId(req);
+        // Get the session from the request
+        var session = req.session;
+        var userId = session.passport.user;
+        // Create the session.users hash if it doesn't exist already
+        session.users = session.users || {};
+        // Room.unwatch(req.socket);
+        // User.unwatch(req.socket);
+        User.publishDestroy(req.socket.id);
+        console.log(req.socket.id, ' deleted');
 
     }
 };

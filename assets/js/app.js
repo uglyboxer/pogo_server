@@ -110,6 +110,8 @@ io.socket.on('connect', function socketConnected() {
 
         // Handle user destruction
         case 'destroyed':
+          console.log(message);
+          console.log('Anything');
           removeUser(message.id);
           break;
 
@@ -141,6 +143,11 @@ io.socket.on('connect', function socketConnected() {
     // Add a click handler for the "New room" button
     // newRoom() is defined in room.js.
     $('#new-room').click(newRoom);
+
+    $('#logout').click(function() {
+      io.socket.get('/user/logout');
+    })
+
 
     console.log('Socket is now connected!');
 

@@ -31,8 +31,8 @@ module.exports = {
         })(req, res);
     },
 
-    logout: function(req, res) {
-        req.logout();
-        res.redirect('/');
-    }
+    // logout: function(req, res) {
+    //     req.logout();
+    //     res.redirect('/');
+    // }
 };
