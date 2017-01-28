@@ -14,10 +14,12 @@ io.socket.on('connect', function socketConnected() {
 
     // Announce that a new user is online--in this somewhat contrived example,
     // this also causes the CREATION of the user, so each window/tab is a new user.
+    io.socket.get("/user/subscribe", function(data) {
+      console.log('subbed', data);
+    });
     io.socket.get("/user/announce", function(data){
       window.me = data;
-      console.log(data);
-      updateMyName(data);
+      // updateMyName(data);
 
       // Get the current list of users online.  This will also subscribe us to
       // update and destroy events for the individual users.
@@ -82,11 +84,13 @@ io.socket.on('connect', function socketConnected() {
     // of the User model to see which messages will be broadcast by default
     // to subscribed sockets.
     io.socket.on('user', function messageReceived(message) {
-
+      console.log(message);
       switch (message.verb) {
 
         // Handle user creation
         case 'created':
+          console.log(message.data);
+          console.log('makin progress');
           addUser(message.data);
           break;
 

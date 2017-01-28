@@ -21,46 +21,35 @@ module.exports = {
         });
     },
 
-    announce: function(req, res) {
+    subscribe: function(req, res) {
+      if (req.isSocket) {
+        console.log('do eet dammeet');
+      }
+      User.find().exec(function(err, users) {
+        console.log(users);
+        User.subscribe(req, users);
+        User.watch(req);
+      });
+    },
+
+    announce: function(req, res, next) {
 
         // Get the socket ID from the reauest
         var socketId = sails.sockets.getId(req);
         // Get the session from the request
         var session = req.session;
         var userId = session.passport.user;
-        // Create the session.users hash if it doesn't exist already
-        session.users = session.users || {};
-        console.log(session.users);
-        // User.create({
-        User.findOne({ id: userId }).exec(function(err, user) {
-            if (err) {
-                return res.serverError(err);
-            }
-
-            // Save this user in the session, indexed by their socket ID.
-            // This way we can look the user up by socket ID later.
-            session.users[socketId] = user;
-
-            // Subscribe the connected socket to custom messages regarding the user.
-            // While any socket subscribed to the user will receive messages about the
-            // user changing their name or being destroyed, ONLY this particular socket
-            // will receive "message" events.  This allows us to send private messages
-            // between users.
-            User.subscribe(req.socket, user, 'message');
-
-            //     // Get updates about users being created
-            User.watch(req);
-
-            //     // Get updates about rooms being created
-            Room.watch(req);
-
-            //     // Publish this user creation event to every socket watching the User model via User.watch()
-            User.publishCreate(user);
-            console.log(user, ' logged in.');
-
-            return res.json(user);
-
+        User.findOne({id: userId}, function(err, user) {
+          if (err) return next(err);
+          User.publishUpdate(userId, {
+            loggedIn: true,
+            id: userId,
+            name: user.name,
+            action: ' has logged in.'
+          });
         });
+        return res.send(200);
+
 
     },
 
@@ -74,7 +63,7 @@ module.exports = {
         session.users = session.users || {};
         // Room.unwatch(req.socket);
         // User.unwatch(req.socket);
-        User.publishDestroy(req.socket.id);
+        User.publishDestroy(req.socket.id, req.socket);
         console.log(req.socket.id, ' deleted');
 
     }
