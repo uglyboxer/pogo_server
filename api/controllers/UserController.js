@@ -29,6 +29,13 @@ module.exports = {
         console.log(users);
         User.subscribe(req, users);
         User.watch(req);
+
+      });
+      Room.find().exec(function(err, rooms) {
+        console.log(rooms);
+        Room.subscribe(req, rooms);
+        Room.watch(req);
+
       });
     },
 
@@ -48,22 +55,16 @@ module.exports = {
             action: ' has logged in.'
           });
         });
-        return res.send(200);
+        return res.send(user);
 
 
     },
 
     logout: function(req, res) {
-              // Get the socket ID from the reauest
-        var socketId = sails.sockets.getId(req);
-        // Get the session from the request
-        var session = req.session;
-        var userId = session.passport.user;
-        // Create the session.users hash if it doesn't exist already
-        session.users = session.users || {};
-        // Room.unwatch(req.socket);
-        // User.unwatch(req.socket);
-        User.publishDestroy(req.socket.id, req.socket);
+        if (req.isSocket) {
+          console.log('I guess');
+        }
+        User.publishDestroy(req.session.passport.user, req);
         console.log(req.socket.id, ' deleted');
 
     }

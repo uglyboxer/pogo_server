@@ -114,8 +114,6 @@ io.socket.on('connect', function socketConnected() {
 
         // Handle user destruction
         case 'destroyed':
-          console.log(message);
-          console.log('Anything');
           removeUser(message.id);
           break;
 
