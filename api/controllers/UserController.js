@@ -35,7 +35,7 @@ module.exports = {
         console.log(rooms);
         Room.subscribe(req, rooms);
         Room.watch(req);
-
+      return res.send(200);
 
       });
     },
@@ -54,7 +54,7 @@ module.exports = {
           User.publishUpdate(userId, {
             loggedIn: true,
             id: userId,
-            name: user.name,
+            name: user.username,
             action: ' has logged in.'
           });
         return res.send(user);
@@ -69,12 +69,11 @@ module.exports = {
 
     logout: function(req, res) {
         if (req.isSocket) {
-          console.log('I guess');
-        }
-        var userId = req.session.passport.user
+        var userId = req.session.passport.user;
         User.publishDestroy(userId, req);
         delete sails.config.globals.LOGGED_IN_USERS[userId];
         console.log(req.socket.id, ' deleted');
+        }
 
     }
 };

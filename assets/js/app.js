@@ -20,6 +20,7 @@ io.socket.on('connect', function socketConnected() {
 
     io.socket.get("/user/announce", function(data){
       window.me = data;
+      console.log('looking glass ', window.me);
       // updateMyName(data);
 
       // Get the current list of users online.  This will also subscribe us to
@@ -27,11 +28,11 @@ io.socket.on('connect', function socketConnected() {
 
       // Get the current list of chat rooms. This will also subscribe us to
       // update and destroy events for the individual rooms.
-      io.socket.get('/room', updateRoomList);
 
+      io.socket.get('/user/online', updateUserList);
+      io.socket.get('/room', updateRoomList);
     });
 
-    io.socket.get('/user/online', updateUserList);
     // Listen for the "room" event, which will be broadcast when something
     // happens to a room we're subscribed to.  See the "autosubscribe" attribute
     // of the Room model to see which messages will be broadcast by default

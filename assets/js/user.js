@@ -11,10 +11,9 @@ function updateName() {
 
 // Add a user to the list of available users to chat with
 function addUser(user) {
-
   // Get a handle to the user list <select> element
   var select = $('#users-list');
-
+  console.log('diggin ',user);
   // Create a new <option> for the <select> with the new user's information
   var option = $('<option id="'+"user-"+user.id+'" value="'+user.id+'">'+(user.username == "unknown" ? "User #" + user.id : user.username)+'</option>');
 
@@ -55,7 +54,7 @@ function updateUserList(users) {
   Object.keys(users).forEach(function(key, index) {
     var user = users[key];
     console.log('just one: ', user.username);
-    // if (user.id == window.me.id) {return;}
+    if (user.id == window.me.id) {return;}
     addUser(user);
   }, users);
 }
