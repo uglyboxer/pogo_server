@@ -49,28 +49,21 @@ module.exports = {
         var userId = session.passport.user;
         User.findOne({id: userId}, function(err, user) {
           if (err) return next(err);
+
+
           User.publishUpdate(userId, {
             loggedIn: true,
             id: userId,
             name: user.name,
             action: ' has logged in.'
           });
-        });
         return res.send(user);
+        });
 
 
     },
 
     online: function(req, res) {
-      // User.findOne({id: req.session.passport.user}, function(err, user) {
-      //     if (err) return next(err);
-      //     username = user.username;
-      //   });
-      sails.config.globals.LOGGED_IN_USERS.push({
-              id: req.session.passport.user,
-              // username: username,
-              login: Date.now()
-            });
       return res.send(sails.config.globals.LOGGED_IN_USERS)
     },
 
@@ -78,7 +71,9 @@ module.exports = {
         if (req.isSocket) {
           console.log('I guess');
         }
-        User.publishDestroy(req.session.passport.user, req);
+        var userId = req.session.passport.user
+        User.publishDestroy(userId, req);
+        delete sails.config.globals.LOGGED_IN_USERS[userId];
         console.log(req.socket.id, ' deleted');
 
     }

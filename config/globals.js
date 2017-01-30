@@ -60,5 +60,5 @@ module.exports.globals = {
   ****************************************************************************/
 
 	// models: true,
-  LOGGED_IN_USERS: [],
+  LOGGED_IN_USERS: {},
 };

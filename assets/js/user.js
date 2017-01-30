@@ -52,9 +52,10 @@ function removeUser(user) {
 // Add multiple users to the users list.
 function updateUserList(users) {
   console.log('Here they be: ', users);
-  users.forEach(function(user) {
-    console.log('just one: ', user.id);
-    if (user.id == window.me.id) {return;}
+  Object.keys(users).forEach(function(key, index) {
+    var user = users[key];
+    console.log('just one: ', user.username);
+    // if (user.id == window.me.id) {return;}
     addUser(user);
-  });
+  }, users);
 }

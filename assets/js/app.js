@@ -92,7 +92,7 @@ io.socket.on('connect', function socketConnected() {
         case 'created':
           console.log(message.data);
           console.log('makin progress');
-          addUser(message.data);
+          // addUser(message.data);
           break;
 
         // Handle a user changing their name

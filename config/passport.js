@@ -35,6 +35,14 @@ passport.use(new LocalStrategy({
             createdAt: user.createdAt,
             id: user.id
           };
+
+          sails.config.globals.LOGGED_IN_USERS[user.id] = {
+              id: user.id,
+              username: user.username,
+              login: Date.now()
+            };
+
+
           return done(null, returnUser, {
             message: 'Logged In Successfully'
           });
