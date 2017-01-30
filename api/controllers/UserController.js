@@ -73,6 +73,7 @@ module.exports = {
         User.publishDestroy(userId, req);
         delete sails.config.globals.LOGGED_IN_USERS[userId];
         console.log(req.socket.id, ' deleted');
+        req.session.destroy();
         }
 
     }

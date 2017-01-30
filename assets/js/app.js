@@ -151,6 +151,7 @@ io.socket.on('connect', function socketConnected() {
 
     $('#logout').click(function() {
       io.socket.get('/user/logout');
+      window.location.href = '/';
     })
 
 
