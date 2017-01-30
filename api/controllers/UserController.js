@@ -36,6 +36,7 @@ module.exports = {
         Room.subscribe(req, rooms);
         Room.watch(req);
 
+
       });
     },
 
@@ -58,6 +59,19 @@ module.exports = {
         return res.send(user);
 
 
+    },
+
+    online: function(req, res) {
+      // User.findOne({id: req.session.passport.user}, function(err, user) {
+      //     if (err) return next(err);
+      //     username = user.username;
+      //   });
+      sails.config.globals.LOGGED_IN_USERS.push({
+              id: req.session.passport.user,
+              // username: username,
+              login: Date.now()
+            });
+      return res.send(sails.config.globals.LOGGED_IN_USERS)
     },
 
     logout: function(req, res) {

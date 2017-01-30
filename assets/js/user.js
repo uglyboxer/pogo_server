@@ -51,8 +51,10 @@ function removeUser(user) {
 
 // Add multiple users to the users list.
 function updateUserList(users) {
+  console.log('Here they be: ', users);
   users.forEach(function(user) {
-    if (user.id == me.id) {return;}
+    console.log('just one: ', user.id);
+    if (user.id == window.me.id) {return;}
     addUser(user);
   });
 }
