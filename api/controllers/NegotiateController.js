@@ -7,6 +7,7 @@
 
 module.exports = {
   	create: function(req, res) {
+      console.log(req);
       Negotiate.create(req.params.all()).exec(function(err, negotiaion) {
         if (err) return res.negotiate(err);
         res.send(200);

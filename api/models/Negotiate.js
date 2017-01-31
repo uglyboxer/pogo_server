@@ -6,17 +6,18 @@
  */
 
 module.exports = {
-  autosubscribe: ['destroy', 'update', 'add:users', 'remove:users'],
-  attributes: {
-    black_player: {
-      collection: 'user',
-  },
-    white_player: {
-      collection: 'user',
-  },
-    board_size: 'integer',
-    komi: 'integer',
-    time_system: 'integer',
-    time_limit: 'string',
+    autosubscribe: ['destroy', 'update'],
+    attributes: {
+        black_player: {
+            collection: 'user',
+        },
+        white_player: {
+            collection: 'user',
+        },
+        board_size: 'integer',
+        komi: 'integer',
+        time_system: 'integer',
+        time_limit: 'string',
+        confirmed: 'boolean'
+    }
 };
-

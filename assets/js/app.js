@@ -154,6 +154,9 @@ io.socket.on('connect', function socketConnected() {
       window.location.href = '/';
     })
 
+    $('#start-negotiation').click(function() {
+      io.socket.get('/negotiate/create');
+    });
 
     console.log('Socket is now connected!');
 

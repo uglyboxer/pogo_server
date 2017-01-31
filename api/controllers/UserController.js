@@ -35,6 +35,12 @@ module.exports = {
         console.log(rooms);
         Room.subscribe(req, rooms);
         Room.watch(req);
+      });
+
+      Negotiation.find({'confirmed': false}).exec(function(err, negotiations) {
+        console.log(Negotiations);
+        Negotiation.subscribe(req, negotiations);
+        Negotiation.watch(req);
       return res.send(200);
 
       });
