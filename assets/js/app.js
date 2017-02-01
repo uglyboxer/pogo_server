@@ -15,22 +15,22 @@ io.socket.on('connect', function socketConnected() {
     // Announce that a new user is online--in this somewhat contrived example,
     // this also causes the CREATION of the user, so each window/tab is a new user.
     io.socket.get("/user/subscribe", function(data) {
-      console.log('subbed', data);
+        console.log('subbed', data);
     });
 
-    io.socket.get("/user/announce", function(data){
-      window.me = data;
-      console.log('looking glass ', window.me);
-      // updateMyName(data);
+    io.socket.get("/user/announce", function(data) {
+        window.me = data;
+        console.log('looking glass ', window.me);
+        // updateMyName(data);
 
-      // Get the current list of users online.  This will also subscribe us to
-      // update and destroy events for the individual users.
+        // Get the current list of users online.  This will also subscribe us to
+        // update and destroy events for the individual users.
 
-      // Get the current list of chat rooms. This will also subscribe us to
-      // update and destroy events for the individual rooms.
+        // Get the current list of chat rooms. This will also subscribe us to
+        // update and destroy events for the individual rooms.
 
-      io.socket.get('/user/online', updateUserList);
-      io.socket.get('/room', updateRoomList);
+        io.socket.get('/user/online', updateUserList);
+        io.socket.get('/room', updateRoomList);
     });
 
     // Listen for the "room" event, which will be broadcast when something
@@ -39,45 +39,45 @@ io.socket.on('connect', function socketConnected() {
     // to subscribed sockets.
     io.socket.on('room', function messageReceived(message) {
 
-      switch (message.verb) {
+        switch (message.verb) {
 
-        // Handle room creation
-        case 'created':
-          addRoom(message.data);
-          break;
+            // Handle room creation
+            case 'created':
+                addRoom(message.data);
+                break;
 
-        // Handle a user joining a room
-        case 'addedTo':
-          // Post a message in the room
-          postStatusMessage('room-messages-'+message.id, $('#user-'+message.addedId).text()+' has joined');
-          // Update the room user count
-          increaseRoomCount(message.id);
-          break;
+                // Handle a user joining a room
+            case 'addedTo':
+                // Post a message in the room
+                postStatusMessage('room-messages-' + message.id, $('#user-' + message.addedId).text() + ' has joined');
+                // Update the room user count
+                increaseRoomCount(message.id);
+                break;
 
-        // Handle a user leaving a room
-        case 'removedFrom':
-          // Post a message in the room
-          postStatusMessage('room-messages-'+message.id, $('#user-'+message.removedId).text()+' has left');
-          // Update the room user count
-          decreaseRoomCount(message.id);
-          break;
+                // Handle a user leaving a room
+            case 'removedFrom':
+                // Post a message in the room
+                postStatusMessage('room-messages-' + message.id, $('#user-' + message.removedId).text() + ' has left');
+                // Update the room user count
+                decreaseRoomCount(message.id);
+                break;
 
-        // Handle a room being destroyed
-        case 'destroyed':
-          removeRoom(message.id);
-          break;
+                // Handle a room being destroyed
+            case 'destroyed':
+                removeRoom(message.id);
+                break;
 
-        // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
-        // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
-        // to see where a socket gets subscribed to a Room instance's "message" context.
-        case 'messaged':
-          receiveRoomMessage(message.data);
-          break;
+                // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
+                // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
+                // to see where a socket gets subscribed to a Room instance's "message" context.
+            case 'messaged':
+                receiveRoomMessage(message.data);
+                break;
 
-        default:
-          break;
+            default:
+                break;
 
-      }
+        }
 
     });
 
@@ -86,50 +86,50 @@ io.socket.on('connect', function socketConnected() {
     // of the User model to see which messages will be broadcast by default
     // to subscribed sockets.
     io.socket.on('user', function messageReceived(message) {
-      console.log(message);
-      switch (message.verb) {
+        console.log(message);
+        switch (message.verb) {
 
-        // Handle user creation
-        case 'created':
-          console.log(message.data);
-          console.log('makin progress');
-          // addUser(message.data);
-          break;
+            // Handle user creation
+            case 'created':
+                console.log(message.data);
+                console.log('makin progress');
+                // addUser(message.data);
+                break;
 
-        // Handle a user changing their name
-        case 'updated':
+                // Handle a user changing their name
+            case 'updated':
 
-          // Get the user's old name by finding the <option> in the list with their ID
-          // and getting its text.
-          addUser(message.data);
-          var oldName = $('#user-'+message.id).text();
+                // Get the user's old name by finding the <option> in the list with their ID
+                // and getting its text.
+                addUser(message.data);
+                var oldName = $('#user-' + message.id).text();
 
-          // Update the name in the user select list
-          $('#user-'+message.id).text(message.data.name);
+                // Update the name in the user select list
+                $('#user-' + message.id).text(message.data.name);
 
-          // If we have a private convo with them, update the name there and post a status message in the chat.
-          if ($('#private-username-'+message.id).length) {
-            $('#private-username-'+message.id).html(message.data.name);
-            postStatusMessage('private-messages-'+message.id,oldName+' has changed their name to '+message.data.name);
-          }
+                // If we have a private convo with them, update the name there and post a status message in the chat.
+                if ($('#private-username-' + message.id).length) {
+                    $('#private-username-' + message.id).html(message.data.name);
+                    postStatusMessage('private-messages-' + message.id, oldName + ' has changed their name to ' + message.data.name);
+                }
 
-          break;
+                break;
 
-        // Handle user destruction
-        case 'destroyed':
-          removeUser(message.id);
-          break;
+                // Handle user destruction
+            case 'destroyed':
+                removeUser(message.id);
+                break;
 
-        // Handle private messages.  Only sockets subscribed to the "message" context of a
-        // User instance will get this message--see the onConnect logic in config/sockets.js
-        // to see where a new user gets subscribed to their own "message" context
-        case 'messaged':
-          receivePrivateMessage(message.data);
-          break;
+                // Handle private messages.  Only sockets subscribed to the "message" context of a
+                // User instance will get this message--see the onConnect logic in config/sockets.js
+                // to see where a new user gets subscribed to their own "message" context
+            case 'messaged':
+                receivePrivateMessage(message.data);
+                break;
 
-        default:
-          break;
-      }
+            default:
+                break;
+        }
 
     });
 
@@ -150,21 +150,29 @@ io.socket.on('connect', function socketConnected() {
     $('#new-room').click(newRoom);
 
     $('#logout').click(function() {
-      io.socket.get('/user/logout');
-      window.location.href = '/';
+        io.socket.get('/user/logout');
+        window.location.href = '/';
     })
 
     $('#start-negotiation').click(function() {
-      io.socket.get('/negotiate/create');
+        $('#dialog').show();
+    });
+
+    $('#dialog-form').submit(function() {
+        var data = $('#dialog-form').serializeArray();
+        // TODO, this doesn't work right
+        console.log(data);
+        io.socket.get('/negotiate/create', data);
+
     });
 
     console.log('Socket is now connected!');
 
     // When the socket disconnects, hide the UI until we reconnect.
     io.socket.on('disconnect', function() {
-      // Hide the main UI
-      $('#main').hide();
-      $('#disconnect').show();
+        // Hide the main UI
+        $('#main').hide();
+        $('#disconnect').show();
     });
 
 });
