@@ -6,12 +6,18 @@
  */
 
 module.exports = {
-  	create: function(req, res) {
-      console.log(req);
-      Negotiate.create(req.params.all()).exec(function(err, negotiaion) {
-        if (err) return res.negotiate(err);
-        res.send(200);
-      })
+    create: function(req, res) {
+        Negotiate.create(req.params.all()).exec(function(err, negotiation) {
+            if (err) return res.negotiate(err);
+            Negotiate.publishCreate(negotiation);
+            // res.send(200);
+        })
+    },
+
+    open: function(req, res) {
+        Negotiate.find({ 'confirmed': false }).exec(function(err, negotiations) {
+
+            return res.send(negotiations);
+        });
     }
 };
-

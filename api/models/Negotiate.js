@@ -14,10 +14,16 @@ module.exports = {
         white_player: {
             collection: 'user',
         },
-        board_size: 'integer',
+        board_size: {
+          type: 'integer',
+          defaultsTo: 19
+        },
         komi: 'integer',
         time_system: 'integer',
         time_limit: 'string',
-        confirmed: 'boolean'
+        confirmed: {
+          type: 'boolean',
+          defaultsTo: false
+        }
     }
 };

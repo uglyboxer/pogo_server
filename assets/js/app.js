@@ -15,12 +15,10 @@ io.socket.on('connect', function socketConnected() {
     // Announce that a new user is online--in this somewhat contrived example,
     // this also causes the CREATION of the user, so each window/tab is a new user.
     io.socket.get("/user/subscribe", function(data) {
-        console.log('subbed', data);
     });
 
     io.socket.get("/user/announce", function(data) {
         window.me = data;
-        console.log('looking glass ', window.me);
         // updateMyName(data);
 
         // Get the current list of users online.  This will also subscribe us to
@@ -31,6 +29,7 @@ io.socket.on('connect', function socketConnected() {
 
         io.socket.get('/user/online', updateUserList);
         io.socket.get('/room', updateRoomList);
+        io.socket.get('/negotiate/open', updateOpenNegotiations);
     });
 
     // Listen for the "room" event, which will be broadcast when something
@@ -86,13 +85,10 @@ io.socket.on('connect', function socketConnected() {
     // of the User model to see which messages will be broadcast by default
     // to subscribed sockets.
     io.socket.on('user', function messageReceived(message) {
-        console.log(message);
         switch (message.verb) {
 
             // Handle user creation
             case 'created':
-                console.log(message.data);
-                console.log('makin progress');
                 // addUser(message.data);
                 break;
 
@@ -133,6 +129,31 @@ io.socket.on('connect', function socketConnected() {
 
     });
 
+    io.socket.on('negotiate', function messageReceived(message) {
+      switch (message.verb) {
+                    // Handle negotiation creation
+            case 'created':
+                addNegotiation(message.data);
+                break;
+
+                // Handle a user changing their name
+            case 'updated':
+
+                // Get the user's old name by finding the <option> in the list with their ID
+                // and getting its text.
+                addNegotiation(message.data);
+                break;
+
+                // Handle user destruction
+            case 'destroyed':
+                removeNegotiation(message.id);
+                break;
+
+            default:
+                break;
+      }
+    })
+
     // Add a click handler for the "Update name" button, allowing the user to update their name.
     // updateName() is defined in user.js.
     $('#update-name').click(updateName);
@@ -158,10 +179,10 @@ io.socket.on('connect', function socketConnected() {
         $('#dialog').show();
     });
 
-    $('#dialog-form').submit(function() {
+    $('#dialog-form').submit(function(event) {
+        event.preventDefault();
         var data = $('#dialog-form').serializeArray();
         // TODO, this doesn't work right
-        console.log(data);
         io.socket.get('/negotiate/create', data);
 
     });

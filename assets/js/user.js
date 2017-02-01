@@ -13,7 +13,6 @@ function updateName() {
 function addUser(user) {
   // Get a handle to the user list <select> element
   var select = $('#users-list');
-  console.log('diggin ',user);
   // Create a new <option> for the <select> with the new user's information
   var option = $('<option id="'+"user-"+user.id+'" value="'+user.id+'">'+(user.username == "unknown" ? "User #" + user.id : user.username)+'</option>');
 
@@ -50,10 +49,8 @@ function removeUser(user) {
 
 // Add multiple users to the users list.
 function updateUserList(users) {
-  console.log('Here they be: ', users);
   Object.keys(users).forEach(function(key, index) {
     var user = users[key];
-    console.log('just one: ', user.username);
     if (user.id == window.me.id) {return;}
     addUser(user);
   }, users);
@@ -63,7 +60,6 @@ function updateUserList(users) {
 function addNegotiation(negotiation) {
   // Get a handle to the negotiation list <select> element
   var select = $('#negotiation-list');
-  console.log('diggin ',negotiation);
   // Create a new <option> for the <select> with the new negotiation's information
   var option = $('<option id="'+"negotiation-"+negotiation.id+'" value="'+negotiation.id+'">game</option>');
 
@@ -71,8 +67,7 @@ function addNegotiation(negotiation) {
   select.append(option);
 }
 
-function updateProposals(negotiations) {
-  console.log('Here they be: ', negotiations);
+function updateOpenNegotiations(negotiations) {
   negotiations.forEach(addNegotiation);
 
 }

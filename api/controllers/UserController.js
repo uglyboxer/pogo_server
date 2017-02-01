@@ -11,7 +11,6 @@ module.exports = {
      * `UserController.signup()`
      */
     signup: function(req, res) {
-      console.log(req.params.all());
         User.create(req.params.all()).exec(function(err, user) {
             if (err) return res.negotiate(err);
             req.login(user, function(err) {
@@ -22,28 +21,24 @@ module.exports = {
     },
 
     subscribe: function(req, res) {
-      if (req.isSocket) {
-        console.log('do eet dammeet');
-      }
-      User.find().exec(function(err, users) {
-        console.log(users);
-        User.subscribe(req, users);
-        User.watch(req);
+        if (req.isSocket) {
+            User.find().exec(function(err, users) {
+                User.subscribe(req, users);
+                User.watch(req);
 
-      });
-      Room.find().exec(function(err, rooms) {
-        console.log(rooms);
-        Room.subscribe(req, rooms);
-        Room.watch(req);
-      });
+            });
+            Room.find().exec(function(err, rooms) {
+                Room.subscribe(req, rooms);
+                Room.watch(req);
+            });
 
-      Negotiation.find({'confirmed': false}).exec(function(err, negotiations) {
-        console.log(Negotiations);
-        Negotiation.subscribe(req, negotiations);
-        Negotiation.watch(req);
-      return res.send(200);
+            Negotiate.find({ 'confirmed': false }).exec(function(err, negotiations) {
+                Negotiate.subscribe(req, negotiations);
+                Negotiate.watch(req);
+                return res.send(200);
 
-      });
+            });
+        }
     },
 
     announce: function(req, res, next) {
@@ -53,33 +48,32 @@ module.exports = {
         // Get the session from the request
         var session = req.session;
         var userId = session.passport.user;
-        User.findOne({id: userId}, function(err, user) {
-          if (err) return next(err);
+        User.findOne({ id: userId }, function(err, user) {
+            if (err) return next(err);
 
 
-          User.publishUpdate(userId, {
-            loggedIn: true,
-            id: userId,
-            name: user.username,
-            action: ' has logged in.'
-          });
-        return res.send(user);
+            User.publishUpdate(userId, {
+                loggedIn: true,
+                id: userId,
+                name: user.username,
+                action: ' has logged in.'
+            });
+            return res.send(user);
         });
 
 
     },
 
     online: function(req, res) {
-      return res.send(sails.config.globals.LOGGED_IN_USERS)
+        return res.send(sails.config.globals.LOGGED_IN_USERS)
     },
 
     logout: function(req, res) {
         if (req.isSocket) {
-        var userId = req.session.passport.user;
-        User.publishDestroy(userId, req);
-        delete sails.config.globals.LOGGED_IN_USERS[userId];
-        console.log(req.socket.id, ' deleted');
-        req.session.destroy();
+            var userId = req.session.passport.user;
+            User.publishDestroy(userId, req);
+            delete sails.config.globals.LOGGED_IN_USERS[userId];
+            req.session.destroy();
         }
 
     }
