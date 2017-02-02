@@ -56,22 +56,4 @@ function updateUserList(users) {
   }, users);
 }
 
-// Add a user to the list of available users to chat with
-function addNegotiation(negotiation) {
-  // Get a handle to the negotiation list <select> element
-  var negotiations = $('#negotiation-list');
-  // Create a new <option> for the <select> with the new negotiation's information
-  var option = $('<button onclick="openNegotiate('+ negotiation.id + ')" id="'+"negotiation-"+negotiation.id+'" value="'+negotiation.id+'">game'+negotiation.id+'</button><br>');
 
-  // Add the new <option> element
-  negotiations.append(option);
-}
-
-function updateOpenNegotiations(negotiations) {
-  negotiations.forEach(addNegotiation);
-
-}
-
-function openNegotiate(data) {
-  console.log('here', data);
-}
