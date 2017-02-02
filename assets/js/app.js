@@ -183,7 +183,7 @@ io.socket.on('connect', function socketConnected() {
         event.preventDefault();
         var data = $('#dialog-form').serializeArray();
         // TODO, this doesn't work right
-        io.socket.get('/negotiate/create', data);
+        io.socket.post('/negotiate', data);
 
     });
 

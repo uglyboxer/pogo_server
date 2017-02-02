@@ -12,3 +12,10 @@ TODO:
 
   Add modal for negotiations and links in list.
 
+  More detail in user session
+
+  Log user out via passport, or persist info so relogin isn't broken.  Prefernce for relogin timer?
+
+  Move this to a proper todo
+
+  Merge Pogo repos
