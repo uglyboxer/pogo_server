@@ -21,6 +21,7 @@ function updateOpenNegotiations(negotiations) {
 // Open the dialog window to debate the starting rules for a game.
 function openNegotiate(data) {
   console.log('here', data);
+  // io.socket.post('/room/negotiation-'+data+'/users', {id: window.me.id});
   //TODO
   // Join private room on Negotiate model, like RoomController.js
   $('#negotiation-window').show();

@@ -51,7 +51,6 @@ module.exports = {
         User.findOne({ id: userId }, function(err, user) {
             if (err) return next(err);
 
-
             User.publishUpdate(userId, {
                 loggedIn: true,
                 id: userId,

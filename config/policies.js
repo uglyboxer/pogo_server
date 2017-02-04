@@ -27,9 +27,7 @@ module.exports.policies = {
   ***************************************************************************/
 
   '*': true,
-  'UserController': {
-    '*': 'isAuthenticated'
-  },
+
   'RoomController': {
     '*': 'isAuthenticated'
   },

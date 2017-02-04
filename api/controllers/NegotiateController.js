@@ -21,10 +21,10 @@ module.exports = {
         });
     },
 
-    // Join a negotiation room -- this is bound to 'post /room/:roomId/users'
+    // Join a negotiation room -- this is bound to 'post /negotiate/:roomId/users'
     'join': function(req, res, next) {
         // Get the ID of the room to join
-
+        console.log(req);
         // TODO set param name to below
         var negotiationId = req.param('negotiationId');
         // Subscribe the requesting socket to the "message" context,

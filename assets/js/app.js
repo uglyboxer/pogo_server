@@ -149,9 +149,29 @@ io.socket.on('connect', function socketConnected() {
                 removeNegotiation(message.id);
                 break;
 
+                // Handle a user joining a room
+            case 'addedTo':
+                // Post a message in the room
+                postNegotiationStatusMessage('room-messages-' + message.id, $('#user-' + message.addedId).text() + ' has joined');
+                break;
+
+                // Handle a user leaving a room
+            case 'removedFrom':
+                // Post a message in the room if party leaves
+                postNegotiationStatusMessage('room-messages-' + message.id, $('#user-' + message.removedId).text() + ' has left');
+                break;
+
+                // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
+                // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
+                // to see where a socket gets subscribed to a Room instance's "message" context.
+            case 'messaged':
+                receiveNogtiationMessage(message.data);
+                break;
+
             default:
                 break;
-      }
+
+        }
     })
 
     // Add a click handler for the "Update name" button, allowing the user to update their name.
