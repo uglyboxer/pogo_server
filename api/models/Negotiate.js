@@ -28,6 +28,7 @@ module.exports = {
         },
         time_system: 'integer',
         time_limit: 'string',
+        suggestion: 'json',
         confirmed: {
             type: 'boolean',
             defaultsTo: false

@@ -152,7 +152,7 @@ io.socket.on('connect', function socketConnected() {
                 // Handle a user joining a room
             case 'addedTo':
                 // Post a message in the room
-                postNegotiationStatusMessage('room-messages-' + message.id, $('#user-' + message.addedId).text() + ' has joined');
+                postNegotiationStatusMessage('-messages-' + message.id, $('#user-' + message.addedId).text() + ' has joined');
                 break;
 
                 // Handle a user leaving a room
@@ -202,6 +202,7 @@ io.socket.on('connect', function socketConnected() {
     $('#dialog-form').submit(function(event) {
         event.preventDefault();
         var data = $('#dialog-form').serializeArray();
+        // data['owner'] = window.me.id;
         // TODO, this doesn't work right
         io.socket.post('/negotiate', data);
 
