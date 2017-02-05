@@ -8,10 +8,10 @@
 module.exports = {
     autosubscribe: ['destroy', 'update'],
     attributes: {
-        black_player: {
+        owner: {
             collection: 'user',
         },
-        white_player: {
+        challenger: {
             collection: 'user',
         },
         users: {
@@ -22,7 +22,10 @@ module.exports = {
             type: 'integer',
             defaultsTo: 19
         },
-        komi: 'integer',
+        komi: {
+            type: 'float',
+            defaultsTo: 6.5
+        },
         time_system: 'integer',
         time_limit: 'string',
         confirmed: {
