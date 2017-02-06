@@ -35,22 +35,22 @@ module.exports = {
         // Continue processing the route, allowing the blueprint
         // to handle adding the user instance to the room's `users`
         // collection.
-        Negotiate.findOne({id: negotiationId}).exec(function(err, negotiation) {
-          console.log(negotiation);
-          console.log(negotiation.challenger);
-          if (!negotiation.challenger) {
-            negotiation.update({'challenger': req.session.passport.user}).exec(function(err, next) {
-              if (err) {
-                return err;
-              } else {
-                console.log(negotiation);
-                Negotiate.publishUpdate(negotiation);
-                return next();
-              }
-            })
-          }
-        })
-        // return next();
+        // Negotiate.findOne({id: negotiationId}).exec(function(err, negotiation) {
+        //   console.log(negotiation);
+        //   console.log(negotiation.challenger);
+        //   if (!negotiation.challenger) {
+        //     negotiation.update({'challenger': req.session.passport.user}).exec(function(err, next) {
+        //       if (err) {
+        //         return err;
+        //       } else {
+        //         console.log(negotiation);
+        //         Negotiate.publishUpdate(negotiation);
+        //         return next();
+        //       }
+        //     })
+        //   }
+        // })
+        return next();
     },
 
     // Leave a chat room -- this is bound to 'delete /room/:roomId/users'

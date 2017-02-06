@@ -20,7 +20,10 @@ function updateOpenNegotiations(negotiations) {
 
 // Open the dialog window to debate the starting rules for a game.
 function openNegotiate(data) {
-  io.socket.post('/room/'+data+'/users', {id: window.me.id});
+  console.log(window.me.id);
+  io.socket.post('/negotiate/'+data+'/challenger', {id: window.me.id}, function(resData, jwres){
+    console.log(jwres.statusCode);
+  });
   $('#negotiation-window').show();
 }
 
