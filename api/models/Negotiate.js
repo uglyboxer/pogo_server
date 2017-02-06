@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-    autosubscribe: ['destroy', 'update'],
+    autosubscribe: ['destroy', 'update', 'add:users', 'remove:users'],
     attributes: {
         owner: {
             collection: 'user',

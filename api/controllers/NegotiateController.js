@@ -10,7 +10,8 @@ module.exports = {
         if (req.param('owner') == req.session.passport.user) {
             Negotiate.create(req.params.all()).exec(function(err, negotiation) {
                 if (err) return res.negotiate(err);
-                Negotiate.publishCreate(negotiation);
+                console.log('hi, ',negotiation);
+                Negotiate.subscribe(req, negotiation.id, ['message']);
             })
         }
     },

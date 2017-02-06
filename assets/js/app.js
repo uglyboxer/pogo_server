@@ -85,6 +85,7 @@ io.socket.on('connect', function socketConnected() {
     // of the User model to see which messages will be broadcast by default
     // to subscribed sockets.
     io.socket.on('user', function messageReceived(message) {
+        console.log(message);
         switch (message.verb) {
 
             // Handle user creation
@@ -130,6 +131,7 @@ io.socket.on('connect', function socketConnected() {
     });
 
     io.socket.on('negotiate', function messageReceived(message) {
+      console.log('stuff', message);
       switch (message.verb) {
                     // Handle negotiation creation
             case 'created':
