@@ -7,13 +7,13 @@
 
 module.exports = {
     create: function(req, res) {
-        // if (req.param('user') == req.session.passport.user) {
+        if (req.param('owner') == req.session.passport.user) {
         Negotiate.create(req.params.all()).exec(function(err, negotiation) {
           console.log(req.params.all());
             if (err) return res.negotiate(err);
             Negotiate.publishCreate(negotiation);
         })
-      // }
+      }
     },
 
     open: function(req, res) {
