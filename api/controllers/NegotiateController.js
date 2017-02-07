@@ -33,6 +33,10 @@ module.exports = {
         // so it'll get notified whenever Room.message() is called
         // for this room.
         Negotiate.subscribe(req, negotiationId, ['message']);
+        Negotiate.publishAdd(negotiatonId, 'users', {
+          id: req.session.passport.user,
+
+        })
         // Continue processing the route, allowing the blueprint
         // to handle adding the user instance to the room's `users`
         // collection.
