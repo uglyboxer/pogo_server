@@ -6,24 +6,32 @@
  */
 
 module.exports = {
-    autosubscribe: ['destroy', 'update'],
+    autosubscribe: ['destroy', 'update', 'add:users', 'remove:users'],
     attributes: {
-        black_player: {
+        owner: {
             collection: 'user',
         },
-        white_player: {
+        challenger: {
             collection: 'user',
+        },
+        users: {
+            collection: 'user',
+            via: 'negotiations'
         },
         board_size: {
-          type: 'integer',
-          defaultsTo: 19
+            type: 'integer',
+            defaultsTo: 19
         },
-        komi: 'integer',
+        komi: {
+            type: 'float',
+            defaultsTo: 6.5
+        },
         time_system: 'integer',
         time_limit: 'string',
+        suggestion: 'json',
         confirmed: {
-          type: 'boolean',
-          defaultsTo: false
+            type: 'boolean',
+            defaultsTo: false
         }
     }
 };

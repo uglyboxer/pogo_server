@@ -7,11 +7,13 @@
 
 module.exports = {
     create: function(req, res) {
-        Negotiate.create(req.params.all()).exec(function(err, negotiation) {
-            if (err) return res.negotiate(err);
-            Negotiate.publishCreate(negotiation);
-            // res.send(200);
-        })
+        if (req.param('owner') == req.session.passport.user) {
+            Negotiate.create(req.params.all()).exec(function(err, negotiation) {
+                if (err) return res.negotiate(err);
+                console.log('hi, ',negotiation);
+                Negotiate.subscribe(req, negotiation.id, ['message']);
+            })
+        }
     },
 
     open: function(req, res) {
@@ -21,19 +23,38 @@ module.exports = {
         });
     },
 
-    // Join a negotiation room -- this is bound to 'post /room/:roomId/users'
+    // Join a negotiation room -- this is bound to 'post /negotiate/:roomId/users'
     'join': function(req, res, next) {
         // Get the ID of the room to join
-
+        console.log(req);
         // TODO set param name to below
         var negotiationId = req.param('negotiationId');
         // Subscribe the requesting socket to the "message" context,
         // so it'll get notified whenever Room.message() is called
         // for this room.
         Negotiate.subscribe(req, negotiationId, ['message']);
+        Negotiate.publishAdd(negotiatonId, 'users', {
+          id: req.session.passport.user,
+
+        })
         // Continue processing the route, allowing the blueprint
         // to handle adding the user instance to the room's `users`
         // collection.
+        // Negotiate.findOne({id: negotiationId}).exec(function(err, negotiation) {
+        //   console.log(negotiation);
+        //   console.log(negotiation.challenger);
+        //   if (!negotiation.challenger) {
+        //     negotiation.update({'challenger': req.session.passport.user}).exec(function(err, next) {
+        //       if (err) {
+        //         return err;
+        //       } else {
+        //         console.log(negotiation);
+        //         Negotiate.publishUpdate(negotiation);
+        //         return next();
+        //       }
+        //     })
+        //   }
+        // })
         return next();
     },
 

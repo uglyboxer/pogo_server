@@ -35,6 +35,11 @@ module.exports = {
             dominant: true
         },
 
+        negotiations: {
+            collection: 'negotiate',
+            via: 'users',
+        },
+
         signup: {
             type: 'string'
         }

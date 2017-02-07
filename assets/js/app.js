@@ -85,6 +85,7 @@ io.socket.on('connect', function socketConnected() {
     // of the User model to see which messages will be broadcast by default
     // to subscribed sockets.
     io.socket.on('user', function messageReceived(message) {
+        console.log(message);
         switch (message.verb) {
 
             // Handle user creation
@@ -130,6 +131,7 @@ io.socket.on('connect', function socketConnected() {
     });
 
     io.socket.on('negotiate', function messageReceived(message) {
+      console.log('stuff', message);
       switch (message.verb) {
                     // Handle negotiation creation
             case 'created':
@@ -149,9 +151,29 @@ io.socket.on('connect', function socketConnected() {
                 removeNegotiation(message.id);
                 break;
 
+                // Handle a user joining a room
+            case 'addedTo':
+                // Post a message in the room
+                postNegotiationStatusMessage('-messages-' + message.id, $('#user-' + message.addedId).text() + ' has joined');
+                break;
+
+                // Handle a user leaving a room
+            case 'removedFrom':
+                // Post a message in the room if party leaves
+                postNegotiationStatusMessage('room-messages-' + message.id, $('#user-' + message.removedId).text() + ' has left');
+                break;
+
+                // Handle a public message in a room.  Only sockets subscribed to the "message" context of a
+                // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
+                // to see where a socket gets subscribed to a Room instance's "message" context.
+            case 'messaged':
+                receiveNogtiationMessage(message.data);
+                break;
+
             default:
                 break;
-      }
+
+        }
     })
 
     // Add a click handler for the "Update name" button, allowing the user to update their name.
@@ -181,7 +203,10 @@ io.socket.on('connect', function socketConnected() {
 
     $('#dialog-form').submit(function(event) {
         event.preventDefault();
-        var data = $('#dialog-form').serializeArray();
+        $('#owner').val(window.me.id);
+        var data = {};
+        $('#dialog-form').serializeArray().map(function(x){data[x.name] = x.value;});
+        // data['owner'] = window.me.id;
         // TODO, this doesn't work right
         io.socket.post('/negotiate', data);
 
