@@ -24,7 +24,7 @@ module.exports = {
     },
 
     // Join a negotiation room -- this is bound to 'post /negotiate/:roomId/users'
-    'join': function(req, res, next) {
+    join: function(req, res, next) {
         // Get the ID of the room to join
         console.log(req);
         // TODO set param name to below

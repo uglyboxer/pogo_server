@@ -122,10 +122,11 @@ module.exports.sockets = {
   * disconnects                                                              *
   *                                                                          *
   ***************************************************************************/
-  // afterDisconnect: function(session, socket, cb) {
-  //   // By default: do nothing.
-  //   return cb();
-  // },
+  afterDisconnect: function(session, socket, cb) {
+    // By default: do nothing.
+    User.publishDestroy(session.passport.user);
+    return cb();
+  },
 
   /***************************************************************************
   *                                                                          *
@@ -137,5 +138,7 @@ module.exports.sockets = {
   *                                                                          *
   ***************************************************************************/
   // transports: ["polling", "websocket"]
+  pingInterval: 20000,
+  pingTimeout: 20000,
 
 };
