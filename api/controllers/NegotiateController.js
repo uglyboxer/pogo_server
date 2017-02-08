@@ -28,15 +28,15 @@ module.exports = {
         // Get the ID of the room to join
         console.log(req);
         // TODO set param name to below
-        var negotiationId = req.param('negotiationId');
+        var negotiationId = Number(req.param('negotiationId'));
         // Subscribe the requesting socket to the "message" context,
         // so it'll get notified whenever Room.message() is called
         // for this room.
         Negotiate.subscribe(req, negotiationId, ['message']);
-        Negotiate.publishAdd(negotiatonId, 'users', {
-          id: req.session.passport.user,
+        Negotiate.publishAdd(negotiationId, 'challenger', {
+          id: Number(req.param('id')),
 
-        })
+        });
         // Continue processing the route, allowing the blueprint
         // to handle adding the user instance to the room's `users`
         // collection.
