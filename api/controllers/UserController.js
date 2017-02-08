@@ -41,7 +41,7 @@ module.exports = {
         }
     },
 
-    announce: function(req, res, next) {
+    announce: function(req, res) {
 
         // Get the socket ID from the reauest
         var socketId = sails.sockets.getId(req);

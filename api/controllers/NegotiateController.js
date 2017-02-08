@@ -24,15 +24,17 @@ module.exports = {
     },
 
     // Join a negotiation room -- this is bound to 'post /negotiate/:roomId/users'
-    join: function(req, res, next) {
+    join: function(req, res) {
         // Get the ID of the room to join
-        console.log(req);
         // TODO set param name to below
         var negotiationId = Number(req.param('negotiationId'));
         // Subscribe the requesting socket to the "message" context,
         // so it'll get notified whenever Room.message() is called
         // for this room.
+
+        // TOOD this add to model is broken
         Negotiate.subscribe(req, negotiationId, ['message']);
+        Negotiate.update({id: negotiationId}, {challenger: req});
         Negotiate.publishAdd(negotiationId, 'challenger', {
           id: Number(req.param('id')),
 
@@ -55,7 +57,8 @@ module.exports = {
         //     })
         //   }
         // })
-        return next();
+        // return next();
+        return res.send(200);
     },
 
     // Leave a chat room -- this is bound to 'delete /room/:roomId/users'
