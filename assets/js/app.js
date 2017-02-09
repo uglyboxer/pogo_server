@@ -141,7 +141,8 @@ io.socket.on('connect', function socketConnected() {
             case 'updated':
 
                 // TODO open verification dialog ---> then launch game/destroy negotiation
-                console.log(message.data, ' would like to play.');
+                console.log(message.data.challenger, ' would like to play.');
+                showNegotiation(message.data);
                 break;
 
                 // Handle user destruction

@@ -18,12 +18,18 @@ function updateOpenNegotiations(negotiations) {
 
 }
 
+function showNegotiation(data) {
+  $('#negotiation-window').show();
+  $('#black-player-name').empty()
+  $('#black-player-name').text(data.owner);
+  $('#white-player-name').empty()
+  $('#white-player-name').text(data.challenger);
+}
 // Open the dialog window to debate the starting rules for a game.
 function openNegotiate(data) {
   console.log(window.me.id);
   io.socket.post('/negotiate/join', {id: window.me.id, negotiationId: data}, function(resData, jwres){
     console.log(jwres.statusCode);
   });
-  $('#negotiation-window').show();
 }
 

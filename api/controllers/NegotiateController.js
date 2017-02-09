@@ -36,16 +36,20 @@ module.exports = {
 
         Negotiate.subscribe(req, negotiationId);
         sails.sockets.join(req, negotiationId);
-        Negotiate.update(Number(negotiationId) , { challenger: req.session.passport.user }).exec(function afterwards(err, updated) {
+        Negotiate.update(Number(negotiationId), { challenger: req.session.passport.user }).exec(function afterwards(err, updated) {
 
             if (err) {
-              console.log(err);
+                console.log(err);
                 return;
             }
+            Negotiate.publishUpdate(negotiationId, {
+                negotiation_id: negotiationId,
+                owner: updated[0].owner,
+                challenger: req.session.passport.user
+            });
 
             console.log('Updated challenger to ' + updated[0].id);
         });
-        Negotiate.publishUpdate(negotiationId, {challenger: req.session.passport.user});
 
         return res.send(200);
     },
