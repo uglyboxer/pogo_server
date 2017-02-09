@@ -123,23 +123,17 @@ module.exports.sockets = {
      *                                                                          *
      ***************************************************************************/
     afterDisconnect: function(session, socket, cb) {
-        // By default: do nothing.
-        console.log(session.passport.user);
-        console.log('xxxxxxx');
+        // Remove all negotiation instances and publishDestroy them
+        // Then remove the instance of the User with publishDestroy
+        // so other clients will remove them from the list.
         User.findOne({id: session.passport.user}).populate('negotiations').exec(function(err, user) {
           user.negotiations.forEach(function(n){
-            // TODO actually remove records
                 Negotiate.destroy(n.id).exec(function(err, destroyed) {
                   console.log(destroyed);
                 })
                 Negotiate.publishDestroy(n.id);
           })
         })
-        // Negotiate.find({ owner: session.passport.user }).exec(function(err, negotiations) {
-        //     console.log(negotiations.length);
-        //     negotiations.forEach(function(negotiation) {
-        //     });
-        // });
         User.publishDestroy(session.passport.user);
         return cb();
     },

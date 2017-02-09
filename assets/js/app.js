@@ -138,11 +138,9 @@ io.socket.on('connect', function socketConnected() {
                 addNegotiation(message.data);
                 break;
 
-                // Handle a user changing their name
             case 'updated':
 
-                // Get the user's old name by finding the <option> in the list with their ID
-                // and getting its text.
+                // TODO open verification dialog ---> then launch game/destroy negotiation
                 console.log(message.data, ' would like to play.');
                 break;
 
@@ -152,12 +150,14 @@ io.socket.on('connect', function socketConnected() {
                 removeNegotiation(message.id);
                 break;
 
+                // TODO is this still necessary?
                 // Handle a user joining a room
             case 'addedTo':
                 // Post a message in the room
                 postNegotiationStatusMessage('-messages-' + message.id, $('#user-' + message.addedId).text() + ' has joined');
                 break;
 
+                // TODO is this still used?  Maybe for challenger leaving the negotiation
                 // Handle a user leaving a room
             case 'removedFrom':
                 // Post a message in the room if party leaves
