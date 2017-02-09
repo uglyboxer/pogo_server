@@ -24,6 +24,12 @@ function showNegotiation(data) {
   $('#black-player-name').text(data.owner);
   $('#white-player-name').empty()
   $('#white-player-name').text(data.challenger);
+  console.log(window.me.id);
+  console.log(data.owner);
+  if (data.owner === window.me.id) {
+    $('.approve-buttons').show()
+    // TODO activate buttons or maybe just reverify on server that owner is sending accept
+  }
 }
 // Open the dialog window to debate the starting rules for a game.
 function openNegotiate(data) {

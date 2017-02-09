@@ -42,13 +42,13 @@ module.exports = {
                 console.log(err);
                 return;
             }
+            // TODO Calculate who is black player, who is white
             Negotiate.publishUpdate(negotiationId, {
                 negotiation_id: negotiationId,
                 owner: updated[0].owner,
                 challenger: req.session.passport.user
             });
 
-            console.log('Updated challenger to ' + updated[0].id);
         });
 
         return res.send(200);
