@@ -143,11 +143,12 @@ io.socket.on('connect', function socketConnected() {
 
                 // Get the user's old name by finding the <option> in the list with their ID
                 // and getting its text.
-                addNegotiation(message.data);
+                console.log(message.data, ' would like to play.');
                 break;
 
                 // Handle user destruction
             case 'destroyed':
+                console.log(message);
                 removeNegotiation(message.id);
                 break;
 
@@ -208,7 +209,7 @@ io.socket.on('connect', function socketConnected() {
         $('#dialog-form').serializeArray().map(function(x){data[x.name] = x.value;});
         // data['owner'] = window.me.id;
         // TODO, this doesn't work right
-        io.socket.post('/negotiate', data, function(resdata, jwres) {
+        io.socket.post('/negotiate/create', data, function(resdata, jwres) {
           addNegotiation(resdata);
         });
 

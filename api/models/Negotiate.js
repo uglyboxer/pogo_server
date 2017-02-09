@@ -9,14 +9,10 @@ module.exports = {
     autosubscribe: ['destroy', 'update', 'add:users', 'remove:users'],
     attributes: {
         owner: {
-            collection: 'user',
+            model: 'user'
         },
         challenger: {
             collection: 'user',
-        },
-        users: {
-            collection: 'user',
-            via: 'negotiations'
         },
         board_size: {
             type: 'integer',

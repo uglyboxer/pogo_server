@@ -33,7 +33,7 @@ module.exports = {
             });
 
             Negotiate.find({ 'confirmed': false }).exec(function(err, negotiations) {
-                Negotiate.subscribe(req, negotiations, ['delete']);
+                Negotiate.subscribe(req, negotiations, ['destroy']);
                 Negotiate.watch(req);
                 return res.send(200);
 

@@ -37,7 +37,7 @@ module.exports = {
 
         negotiations: {
             collection: 'negotiate',
-            via: 'users',
+            via: 'owner',
         },
 
         signup: {

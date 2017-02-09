@@ -12,7 +12,8 @@ module.exports = {
                 if (err) return res.negotiate(err);
                 console.log('hi, ', negotiation);
                 Negotiate.subscribe(req, negotiation.id);
-                return res.send(negotiation);
+                Negotiate.publishCreate(negotiation);
+                return res.send(200);
             })
         }
     },
@@ -33,7 +34,6 @@ module.exports = {
         // so it'll get notified whenever Room.message() is called
         // for this room.
 
-        // TOOD publish isn't happening, it seems
         Negotiate.subscribe(req, negotiationId);
         sails.sockets.join(req, negotiationId);
         Negotiate.update(Number(negotiationId) , { challenger: req.session.passport.user }).exec(function afterwards(err, updated) {
