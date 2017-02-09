@@ -129,6 +129,9 @@ module.exports.sockets = {
         User.findOne({id: session.passport.user}).populate('negotiations').exec(function(err, user) {
           user.negotiations.forEach(function(n){
             // TODO actually remove records
+                Negotiate.destroy(n.id).exec(function(err, destroyed) {
+                  console.log(destroyed);
+                })
                 Negotiate.publishDestroy(n.id);
           })
         })
