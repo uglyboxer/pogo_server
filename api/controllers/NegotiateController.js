@@ -10,8 +10,9 @@ module.exports = {
         if (req.param('owner') == req.session.passport.user) {
             Negotiate.create(req.params.all()).exec(function(err, negotiation) {
                 if (err) return res.negotiate(err);
-                console.log('hi, ',negotiation);
-                Negotiate.subscribe(req, negotiation.id, ['message']);
+                console.log('hi, ', negotiation);
+                Negotiate.subscribe(req, negotiation.id);
+                return res.send(negotiation);
             })
         }
     },
@@ -32,32 +33,20 @@ module.exports = {
         // so it'll get notified whenever Room.message() is called
         // for this room.
 
-        // TOOD this add to model is broken
-        Negotiate.subscribe(req, negotiationId, ['message']);
-        Negotiate.update({id: negotiationId}, {challenger: req});
-        Negotiate.publishAdd(negotiationId, 'challenger', {
-          id: Number(req.param('id')),
+        // TOOD publish isn't happening, it seems
+        Negotiate.subscribe(req, negotiationId);
+        sails.sockets.join(req, negotiationId);
+        Negotiate.update(Number(negotiationId) , { challenger: req.session.passport.user }).exec(function afterwards(err, updated) {
 
+            if (err) {
+              console.log(err);
+                return;
+            }
+
+            console.log('Updated challenger to ' + updated[0].id);
         });
-        // Continue processing the route, allowing the blueprint
-        // to handle adding the user instance to the room's `users`
-        // collection.
-        // Negotiate.findOne({id: negotiationId}).exec(function(err, negotiation) {
-        //   console.log(negotiation);
-        //   console.log(negotiation.challenger);
-        //   if (!negotiation.challenger) {
-        //     negotiation.update({'challenger': req.session.passport.user}).exec(function(err, next) {
-        //       if (err) {
-        //         return err;
-        //       } else {
-        //         console.log(negotiation);
-        //         Negotiate.publishUpdate(negotiation);
-        //         return next();
-        //       }
-        //     })
-        //   }
-        // })
-        // return next();
+        Negotiate.publishUpdate(negotiationId, {challenger: req.session.passport.user});
+
         return res.send(200);
     },
 
@@ -67,7 +56,7 @@ module.exports = {
         // TODO set param name to below
         var negotiationId = req.param('negotiationId');
         // Unsubscribe the requesting socket from the "message" context
-        Negotiate.unsubscribe(req, negotiationId, ['message']);
+        Negotiate.unsubscribe(req, negotiationId);
         // Continue processing the route, allowing the blueprint
         // to handle removing the user instance from the room's
         // `users` collection.

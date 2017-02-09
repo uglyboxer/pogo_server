@@ -208,7 +208,9 @@ io.socket.on('connect', function socketConnected() {
         $('#dialog-form').serializeArray().map(function(x){data[x.name] = x.value;});
         // data['owner'] = window.me.id;
         // TODO, this doesn't work right
-        io.socket.post('/negotiate', data);
+        io.socket.post('/negotiate', data, function(resdata, jwres) {
+          addNegotiation(resdata);
+        });
 
     });
 
