@@ -21,11 +21,9 @@ function updateOpenNegotiations(negotiations) {
 function showNegotiation(data) {
   $('#negotiation-window').show();
   $('#black-player-name').empty()
-  $('#black-player-name').text(data.owner);
+  $('#black-player-name').text(data.black.username);
   $('#white-player-name').empty()
-  $('#white-player-name').text(data.challenger);
-  console.log(window.me.id);
-  console.log(data.owner);
+  $('#white-player-name').text(data.white.username);
   if (data.owner === window.me.id) {
     $('.approve-buttons').show()
     // TODO activate buttons or maybe just reverify on server that owner is sending accept

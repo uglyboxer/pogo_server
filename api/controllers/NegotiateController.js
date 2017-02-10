@@ -36,19 +36,40 @@ module.exports = {
 
         Negotiate.subscribe(req, negotiationId);
         sails.sockets.join(req, negotiationId);
-        Negotiate.update(Number(negotiationId), { challenger: req.session.passport.user }).exec(function afterwards(err, updated) {
+        User.findOne({ id: req.session.passport.user }).exec(function(err, user) {
 
-            if (err) {
-                console.log(err);
-                return;
-            }
-            // TODO Calculate who is black player, who is white
-            Negotiate.publishUpdate(negotiationId, {
-                negotiation_id: negotiationId,
-                owner: updated[0].owner,
-                challenger: req.session.passport.user
+            Negotiate.update(Number(negotiationId), { challenger: req.session.passport.user }).exec(function afterwards(err, updated) {
+                var higherRank;
+                var lowerRank;
+
+                User.find({ 'id': updated[0].owner }).exec(function(err, owners) {
+                    var owner = owners[0];
+                    console.log('owner', owner);
+                    console.log('challenger', user);
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    console.log(user.rank, ' > ', owner.rank);
+                    if (user.rank < owner.rank) {
+                        higherRank = user;
+                        loweerRank = owner;
+
+                    } else {
+                        higherRank = owner;
+                        lowerRank = user;
+                    }
+                    console.log(higherRank, 'higher');
+                    Negotiate.publishUpdate(negotiationId, {
+                        negotiation_id: negotiationId,
+                        owner: owner,
+                        black: lowerRank,
+                        white: higherRank,
+                        challenger: req.session.passport.user
+                    });
+                });
+
             });
-
         });
 
         return res.send(200);
