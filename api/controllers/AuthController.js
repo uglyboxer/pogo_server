@@ -13,7 +13,15 @@ module.exports = {
         shortcuts: false,
         rest: false
     },
-
+    signup: function(req, res) {
+        User.create(req.params.all()).exec(function(err, user) {
+            if (err) return res.negotiate(err);
+            req.login(user, function(err) {
+                if (err) return res.negotiate(err);
+                return res.redirect('/');
+            });
+        });
+    },
     login: function(req, res) {
 
         passport.authenticate('local', function(err, user, info) {

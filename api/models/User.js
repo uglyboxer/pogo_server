@@ -23,6 +23,10 @@ module.exports = {
             minLength: 2,
             required: true
         },
+        rank: {
+            type: 'integer',
+            default: 30
+        },
         toJSON: function() {
             var obj = this.toObject();
             delete obj.password;

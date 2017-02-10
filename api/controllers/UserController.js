@@ -10,15 +10,7 @@ module.exports = {
     /**
      * `UserController.signup()`
      */
-    signup: function(req, res) {
-        User.create(req.params.all()).exec(function(err, user) {
-            if (err) return res.negotiate(err);
-            req.login(user, function(err) {
-                if (err) return res.negotiate(err);
-                return res.redirect('/');
-            });
-        });
-    },
+
 
     subscribe: function(req, res) {
         if (req.isSocket) {
