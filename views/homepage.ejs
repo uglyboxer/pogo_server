@@ -1,81 +1,87 @@
 <div id="main">
-<div class='container-fluid'>
-  <div>
-      My name: <input type="text" id="my-name"> <button id="update-name">Update</button>
-  </div>
-  <h1>Users online</h1>
-  <div>
-      <select id="users-list" size="5"></select>
-      <button id="private-msg-button">Send private message to selected user</button>
-      <div id="convos"></div>
-  </div>
-  <div>
-    <button id='start-negotiation'>Propose Game</button>
-  </div>
-  <h1>Chat rooms</h1>
-  <div>
-      <select id="rooms-list" size="5"></select>
-      <button id="join-room">Join selected room</button>
-      <button id="new-room">Start a new room</button>
-      <div id="rooms"></div>
-  </div>
-  <div>
-    <button id='logout'>Logout</button>
-  <div>
+    <div class='container-fluid'>
+        <div>
+            My name:
+            <input type="text" id="my-name">
+            <button id="update-name">Update</button>
+        </div>
+        <h1>Users online</h1>
+        <div>
+            <select id="users-list" size="5"></select>
+            <button id="private-msg-button">Send private message to selected user</button>
+            <div id="convos"></div>
+        </div>
+        <div>
+            <button id='start-negotiation'>Propose Game</button>
+        </div>
+        <h1>Chat rooms</h1>
+        <div>
+            <select id="rooms-list" size="5"></select>
+            <button id="join-room">Join selected room</button>
+            <button id="new-room">Start a new room</button>
+            <div id="rooms"></div>
+        </div>
+        <div>
+            <button id='logout'>Logout</button>
+            </div>
+            <div id="disconnect" style="display:none">Waiting for reconnect...</div>
+            <h1>Open Games</h1>
+            <div id='negoiate'>
+                <div id="negotiation-list" size="5"></div>
+            </div>
+            <div id='dialog' style='display:none'>
+                <form id='dialog-form'>
+                    <input id='owner' style='display:none' name='owner' type='number'>
+                    <label>Board Size</label>
+                    <select name='board_size'>
+                        <option value='19'>19</option>
+                        <option value='13'>13</option>
+                        <option value='9'>9</option>
+                    </select>
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+            <div id='negotiation-window' style='display:none'>
+                <h1>Game Settings</h1>
+                <div class='row'>
+                    <div id='black-player' class='col-xs-2'>
+                        Black Player
+                    </div>
+                    <div id='white-player' class='col-xs-2'>
+                        White Player
+                    </div>
+                    <div id='board-size' class='col-xs-2'>
+                        Board Size
+                    </div>
+                    <div id='komi-setting' class='col-xs-2'>
+                        Komi
+                    </div>
+                    <div id='time-setting' class='col-xs-2'>
+                        Time Setting
+                    </div>
+                </div>
+                <div class='row'>
+                    <div id='black-player-name' class='col-xs-2'>
+                        Black Player
+                    </div>
+                    <div id='white-player-name' class='col-xs-2'>
+                        White Player
+                    </div>
+                    <div id='board-size-value' class='col-xs-2'>
+                        Board Size
+                    </div>
+                    <div id='komi-setting-value' class='col-xs-2'>
+                        Komi
+                    </div>
+                    <div id='time-setting-value' class='col-xs-2'>
+                        Time Setting
+                    </div>
+                    <div class='approve-buttons' style='display:none'>
+                        <button>Accept</button>
+                        <button>Reject</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 </div>
-<div id="disconnect" style="display:none">Waiting for reconnect...</div>
-  <h1>Open Games</h1>
-<div id='negoiate'>
-    <div id="negotiation-list" size="5"></div>
-</div>
-<div id='dialog' style='display:none'>
-<form id='dialog-form'>
-<input id='owner' style='display:none' name='owner' type='number'>
-<label>Board Size</label>
-<select name='board_size'>
-<option value='19'>19</option>
-<option value='13'>13</option>
-<option value='9'>9</option>
-</select>
-<input type="submit" value="Submit">
-</form>
-</div>
-<div id='negotiation-window' style='display:none'>
-<h1>Game Settings</h1>
-  <div class='row'>
-  <div id='black-player' class='col'>
-  Black Player
-  </div>
-  <div id='white-player' class='col'>
-  White Player
-  </div>
-  <div id='board-size' class='col'>
-  Board Size
-  </div>
-  <div id='komi-setting' class='col'>
-  Komi
-  </div>
-  <div id='time-setting' class='col'>
-  Time Setting
-  </div>
-  </div>
-  <div class='row'>
-  <div id='black-player-name' class='col'>
-  Black Player
-  </div>
-  <div id='white-player-name' class='col'>
-  White Player
-  </div>
-  <div id='board-size-value' class='col'>
-  Board Size
-  </div>
-  <div id='komi-setting-value' class='col'>
-  Komi
-  </div>
-  <div id='time-setting-value' class='col'>
-  Time Setting
-  </div>
-  <div class='approve-buttons' style='display:none'><button>Accept</button><button>Reject</button></div>
-  </div>
-</div>
-</div>
+
