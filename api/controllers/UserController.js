@@ -10,15 +10,7 @@ module.exports = {
     /**
      * `UserController.signup()`
      */
-    signup: function(req, res) {
-        User.create(req.params.all()).exec(function(err, user) {
-            if (err) return res.negotiate(err);
-            req.login(user, function(err) {
-                if (err) return res.negotiate(err);
-                return res.redirect('/');
-            });
-        });
-    },
+
 
     subscribe: function(req, res) {
         if (req.isSocket) {
@@ -33,7 +25,7 @@ module.exports = {
             });
 
             Negotiate.find({ 'confirmed': false }).exec(function(err, negotiations) {
-                Negotiate.subscribe(req, negotiations);
+                Negotiate.subscribe(req, negotiations, ['destroy']);
                 Negotiate.watch(req);
                 return res.send(200);
 
@@ -41,7 +33,7 @@ module.exports = {
         }
     },
 
-    announce: function(req, res, next) {
+    announce: function(req, res) {
 
         // Get the socket ID from the reauest
         var socketId = sails.sockets.getId(req);

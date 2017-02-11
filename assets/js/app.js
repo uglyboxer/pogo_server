@@ -85,7 +85,6 @@ io.socket.on('connect', function socketConnected() {
     // of the User model to see which messages will be broadcast by default
     // to subscribed sockets.
     io.socket.on('user', function messageReceived(message) {
-        console.log(message);
         switch (message.verb) {
 
             // Handle user creation
@@ -131,19 +130,16 @@ io.socket.on('connect', function socketConnected() {
     });
 
     io.socket.on('negotiate', function messageReceived(message) {
-      console.log('stuff', message);
       switch (message.verb) {
                     // Handle negotiation creation
             case 'created':
                 addNegotiation(message.data);
                 break;
 
-                // Handle a user changing their name
             case 'updated':
 
-                // Get the user's old name by finding the <option> in the list with their ID
-                // and getting its text.
-                addNegotiation(message.data);
+                // TODO open verification dialog ---> then launch game/destroy negotiation
+                showNegotiation(message.data);
                 break;
 
                 // Handle user destruction
@@ -151,12 +147,14 @@ io.socket.on('connect', function socketConnected() {
                 removeNegotiation(message.id);
                 break;
 
+                // TODO is this still necessary?
                 // Handle a user joining a room
             case 'addedTo':
                 // Post a message in the room
                 postNegotiationStatusMessage('-messages-' + message.id, $('#user-' + message.addedId).text() + ' has joined');
                 break;
 
+                // TODO is this still used?  Maybe for challenger leaving the negotiation
                 // Handle a user leaving a room
             case 'removedFrom':
                 // Post a message in the room if party leaves
@@ -206,9 +204,7 @@ io.socket.on('connect', function socketConnected() {
         $('#owner').val(window.me.id);
         var data = {};
         $('#dialog-form').serializeArray().map(function(x){data[x.name] = x.value;});
-        // data['owner'] = window.me.id;
-        // TODO, this doesn't work right
-        io.socket.post('/negotiate', data);
+        io.socket.post('/negotiate/create', data);
 
     });
 
