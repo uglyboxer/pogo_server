@@ -15,6 +15,8 @@ module.exports = {
                 Negotiate.publishCreate(negotiation);
                 return res.send(200);
             })
+        } else {
+          return res.send(500);
         }
     },
 
@@ -34,7 +36,7 @@ module.exports = {
         // so it'll get notified whenever Room.message() is called
         // for this room.
 
-        Negotiate.subscribe(req, negotiationId);
+        // Negotiate.subscribe(req, negotiationId);
         sails.sockets.join(req, negotiationId);
         User.findOne({ id: req.session.passport.user }).exec(function(err, user) {
 
@@ -44,25 +46,21 @@ module.exports = {
 
                 User.find({ 'id': updated[0].owner }).exec(function(err, owners) {
                     var owner = owners[0];
-                    console.log('owner', owner);
-                    console.log('challenger', user);
                     if (err) {
                         console.log(err);
                         return;
                     }
-                    console.log(user.rank, ' > ', owner.rank);
                     if (user.rank < owner.rank) {
                         higherRank = user;
-                        loweerRank = owner;
+                        lowerRank = owner;
 
                     } else {
                         higherRank = owner;
                         lowerRank = user;
                     }
-                    console.log(higherRank, 'higher');
                     Negotiate.publishUpdate(negotiationId, {
                         negotiation_id: negotiationId,
-                        owner: owner,
+                        owner: owner.id,
                         black: lowerRank,
                         white: higherRank,
                         challenger: req.session.passport.user

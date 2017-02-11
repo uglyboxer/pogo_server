@@ -1,5 +1,6 @@
 // Add a selection for an available open game
 function addNegotiation(negotiation) {
+  console.log(negotiation);
   // Get a handle to the negotiation list <select> element
   var negotiations = $('#negotiation-list');
   // Create a new <option> for the <select> with the new negotiation's information
@@ -31,7 +32,6 @@ function showNegotiation(data) {
 }
 // Open the dialog window to debate the starting rules for a game.
 function openNegotiate(data) {
-  console.log(window.me.id);
   io.socket.post('/negotiate/join', {id: window.me.id, negotiationId: data}, function(resData, jwres){
     console.log(jwres.statusCode);
   });
