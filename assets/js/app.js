@@ -19,6 +19,7 @@ io.socket.on('connect', function socketConnected() {
 
     io.socket.get("/user/announce", function(data) {
         window.me = data;
+        console.log(data, ' back at it');
         // updateMyName(data);
 
         // Get the current list of users online.  This will also subscribe us to
