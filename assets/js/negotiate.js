@@ -1,6 +1,5 @@
 // Add a selection for an available open game
 function addNegotiation(negotiation) {
-  console.log(negotiation);
   // Get a handle to the negotiation list <select> element
   var negotiations = $('#negotiation-list');
   // Create a new <option> for the <select> with the new negotiation's information
@@ -21,13 +20,18 @@ function updateOpenNegotiations(negotiations) {
 
 function showNegotiation(data) {
   $('#negotiation-window').show();
-  $('#black-player-name').empty()
+  $('#black-player-name').empty();
   $('#black-player-name').text(data.black.username);
-  $('#white-player-name').empty()
+  $('#white-player-name').empty();
   $('#white-player-name').text(data.white.username);
   if (data.owner === window.me.id) {
-    $('.approve-buttons').show()
-    // TODO activate buttons or maybe just reverify on server that owner is sending accept
+    $('#accept').prop('disabled', false);
+    $('.approve-buttons').show();
+    $('#accept').click(function(event) {
+        event.preventDefault();
+        io.socket.post('/game/initiate', {negotiation: data});
+
+    })
   }
 }
 // Open the dialog window to debate the starting rules for a game.
