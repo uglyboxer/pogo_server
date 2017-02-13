@@ -177,7 +177,7 @@ io.socket.on('connect', function socketConnected() {
 
     // Add a click handler for the "Update name" button, allowing the user to update their name.
     // updateName() is defined in user.js.
-    $('#update-name').click(updateName);
+    // $('#update-name').click(updateName);
 
     // Add a click handler for the "Send private message" button
     // startPrivateConversation() is defined in private_message.js.

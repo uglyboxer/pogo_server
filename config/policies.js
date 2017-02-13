@@ -26,27 +26,27 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  '*': true,
+  '*': [ 'passport' ],
 
-  'RoomController': {
-    '*': 'isAuthenticated'
-  },
+  // 'RoomController': {
+  //   '*': 'isAuthenticated'
+  // },
 
-  'UserController': {
-    '*': 'isAuthenticated'
-  },
+  // 'UserController': {
+  //   '*': 'isAuthenticated'
+  // },
 
-  'GameController': {
-    '*': 'isAuthenticated'
-  },
+  // 'GameController': {
+  //   '*': 'isAuthenticated'
+  // },
 
-  'ChatController': {
-    '*': 'isAuthenticated'
-  },
+  // 'ChatController': {
+  //   '*': 'isAuthenticated'
+  // },
 
-  'NegotiateController': {
-    '*': 'isAuthenticated'
-  },
+  // 'NegotiateController': {
+  //   '*': 'isAuthenticated'
+  // },
   /***************************************************************************
   *                                                                          *
   * Here's an example of mapping some policies to run before a controller    *
