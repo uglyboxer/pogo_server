@@ -56,7 +56,10 @@ module.exports = {
     },
 
     online: function(req, res) {
-        return res.send(sails.config.globals.LOGGED_IN_USERS)
+        User.find({loggedIn: true}).exec(function(err, users) {
+          console.log('found em, ', users);
+        return res.send(users);
+        })
     },
 
     logout: function(req, res) {

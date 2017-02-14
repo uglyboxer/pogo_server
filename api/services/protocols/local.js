@@ -155,7 +155,12 @@ exports.login = function (req, identifier, password, next) {
       } else {
         req.flash('error', 'Error.Passport.Username.NotFound');
       }
-
+      console.log(user);
+    sails.config.globals.LOGGED_IN_USERS[user.id] = {
+            id: user.id,
+            username: user.username,
+            login: Date.now()
+          };
       return next(null, false);
     }
 

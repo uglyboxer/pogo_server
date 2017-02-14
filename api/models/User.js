@@ -26,6 +26,8 @@ var User = {
             collection: 'negotiate',
             via: 'owner',
         },
+
+        loggedIn: 'boolean'
     },
 };
 

@@ -167,7 +167,10 @@ var AuthController = {
 
         // Mark the session as authenticated to work with default Sails sessionAuth.js policy
         req.session.authenticated = true
-
+        console.log('lookin for ', user);
+        User.update({id: user.id}, {loggedIn: true}).exec(function(err, updated) {
+          console.log('updated', updated);
+        });
         // Upon successful login, send the user to the homepage were req.user
         // will be available.
         res.redirect('/lounge');
