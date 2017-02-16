@@ -40,15 +40,14 @@ module.exports = {
         // Get the session from the request
         var session = req.session;
         var userId = session.passport.user;
-        User.findOne({ id: userId }, function(err, user) {
+        User.update({ id: userId }, {loggedIn: true}).exec(function(err, user) {
             if (err) return next(err);
-
             User.publishUpdate(userId, {
                 loggedIn: true,
                 id: userId,
-                name: user.username,
+                username: user[0].username,
                 action: ' has logged in.'
-            });
+            }, req);  // Don't tell the socket about itself
             return res.send(user);
         });
 
@@ -65,8 +64,12 @@ module.exports = {
     logout: function(req, res) {
         if (req.isSocket) {
             var userId = req.session.passport.user;
+            User.update({id: userId}, {loggedIn: false}).exec(function(err){
+              if (err) {
+                return res.send(500);
+              }
+            })
             User.publishDestroy(userId, req);
-            delete sails.config.globals.LOGGED_IN_USERS[userId];
             req.session.destroy();
         }
 

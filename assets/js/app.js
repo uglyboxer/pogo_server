@@ -85,6 +85,7 @@ io.socket.on('connect', function socketConnected() {
     // of the User model to see which messages will be broadcast by default
     // to subscribed sockets.
     io.socket.on('user', function messageReceived(message) {
+      console.log('find it', message);
         switch (message.verb) {
 
             // Handle user creation
@@ -192,7 +193,7 @@ io.socket.on('connect', function socketConnected() {
 
     $('#logout').click(function() {
         io.socket.get('/user/logout');
-        window.location.href = '/';
+        window.location.href = '/login';
     })
 
     $('#start-negotiation').click(function() {
