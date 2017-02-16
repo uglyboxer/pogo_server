@@ -32,18 +32,25 @@ module.exports.routes = {
   *                                                                          *
   ***************************************************************************/
 
-  '/': {
-    view: 'welcome',
+  '/lounge': {
+    view: 'homepage',
     locals: {
       layout: 'sockets'
     }
   },
-  '/lounge': {view: 'homepage'},
-  'post /login': 'AuthController.login',
-  'post /signup': 'AuthController.signup',
-  // 'post /logout': 'UserController.logout',
-  'post /room/:roomId/users': 'RoomController.join',
-  'delete /room/:roomId/users': 'RoomController.leave',
+  // '/lounge': {view: 'homepage'},
+
+  'get /login': 'AuthController.login',
+  'get /logout': 'AuthController.logout',
+  'get /register': 'AuthController.register',
+
+  'post /auth/local': 'AuthController.callback',
+  'post /auth/local/:action': 'AuthController.callback',
+
+  'get /auth/:provider': 'AuthController.provider',
+  'get /auth/:provider/callback': 'AuthController.callback',
+  // 'post /room/:roomId/users': 'RoomController.join',
+  // 'delete /room/:roomId/users': 'RoomController.leave',
 
 
   /***************************************************************************

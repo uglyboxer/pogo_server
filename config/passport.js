@@ -1,50 +1,68 @@
-var passport = require('passport'),
-LocalStrategy = require('passport-local').Strategy,
-bcrypt = require('bcrypt');
+/**
+ * Passport configuration
+ *
+ * This is the configuration for your Passport.js setup and where you
+ * define the authentication strategies you want your application to employ.
+ *
+ * I have tested the service with all of the providers listed below - if you
+ * come across a provider that for some reason doesn't work, feel free to open
+ * an issue on GitHub.
+ *
+ * Also, authentication scopes can be set through the `scope` property.
+ *
+ * For more information on the available providers, check out:
+ * http://passportjs.org/guide/providers/
+ */
 
-passport.serializeUser(function(user, done) {
-    done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-    User.findOne({ id: id } , function (err, user) {
-        done(err, user);
-    });
-});
-
-passport.use(new LocalStrategy({
-    usernameField: 'username',
-    passwordField: 'password'
+module.exports.passport = {
+  local: {
+    strategy: require('passport-local').Strategy
   },
-  function(username, password, done) {
 
-    User.findOne({ username: username }, function (err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      bcrypt.compare(password, user.password, function (err, res) {
-          if (!res)
-            return done(null, false, {
-              message: 'Invalid Password'
-            });
-          var returnUser = {
-            username: user.username,
-            createdAt: user.createdAt,
-            id: user.id
-          };
+  // bearer: {
+  //   strategy: require('passport-http-bearer').Strategy
+  // },
 
-          sails.config.globals.LOGGED_IN_USERS[user.id] = {
-              id: user.id,
-              username: user.username,
-              login: Date.now()
-            };
+  twitter: {
+    name: 'Twitter',
+    protocol: 'oauth',
+    strategy: require('passport-twitter').Strategy,
+    options: {
+      consumerKey: 'your-consumer-key',
+      consumerSecret: 'your-consumer-secret'
+    }
+  },
+
+  github: {
+    name: 'GitHub',
+    protocol: 'oauth2',
+    strategy: require('passport-github').Strategy,
+    options: {
+      clientID: 'your-client-id',
+      clientSecret: 'your-client-secret'
+    }
+  },
+
+  facebook: {
+    name: 'Facebook',
+    protocol: 'oauth2',
+    strategy: require('passport-facebook').Strategy,
+    options: {
+      clientID: 'your-client-id',
+      clientSecret: 'your-client-secret',
+      scope: ['email'] /* email is necessary for login behavior */
+    }
+  },
+
+  google: {
+    name: 'Google',
+    protocol: 'oauth2',
+    strategy: require('passport-google-oauth').OAuth2Strategy,
+    options: {
+      clientID: 'your-client-id',
+      clientSecret: 'your-client-secret'
+    }
+  },
 
 
-          return done(null, returnUser, {
-            message: 'Logged In Successfully'
-          });
-        });
-    });
-  }
-));
+};
