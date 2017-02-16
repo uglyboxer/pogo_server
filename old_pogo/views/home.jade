@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  p Room List
+  ul#room-list
+
+  select(id="color", name="color")
+      option(value="black") Black
+      option(value="white") White
+      option(value="viewer") Viewer
+
+  select(id="board-size", name="boardsize")
+      option(value='9') 9
+      option(value='13') 13
+      option(value='19') 19
+
+
+  div.tenuki-board(data-include-coordinates=true)
+  div.controls
+    div.buttons
+      a(href='#').pass Pass
+      a(href='#').undo Undo
+    div.game-info
+      p
+    div.text-info
+      p
+  button(onclick='initGame(true)') Start Game
+  script(src="/socket.io/socket.io.js")
+  link(href='stylesheets/tenuki.css', rel='stylesheet')
+  script(src="js/tenuki.js")
+  link(href='stylesheets/example.css', rel='stylesheet')
+  script(src="js/example-controls.js")
+  script(src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous")
+  script(src='/js/web-client.js')
+  script(src='/js/example-controls.js')

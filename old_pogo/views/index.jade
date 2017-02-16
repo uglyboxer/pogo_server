@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  button(onclick="document.getElementById('id01').style.display='block'") Login
+  div#id01.modal
+    span.close(onclick="document.getElementById('id01').style.display='none'")
+
+    form.modal-content.animate(name='login-form', method='post', action='/login')
+      div.imgcontainer
+        img.avatar(src="img_avatar2.png", alt='Avatar')
+      div.container
+        label Username
+        input(type='text', placeholder='Username', name='uname', required)
+        label Password
+        input(type='password', placeholder='Password', name='psw', required)
+        button(type='submit') Login
+        input(type='checkbox', checked='checked')
+      div.container(style='background-color:#f1f1f1')
+        button.cancelbtn(type='button', onclick='document.getElementById("id01").style.display= "none"') Cancel
+        span.psw Forgot 
+          a(href="#") password?
+
+
