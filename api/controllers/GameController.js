@@ -13,6 +13,18 @@ module.exports = {
         if (err) {return res.send(500);}
       });
       Negotiate.publishDestroy(negotiation.negotiation_id);
+      console.log(negotiation);
+      params = {
+        black: negotiation.black,
+        white: negotiation.white,
+        handicap: negotiation.handicap,
+        timeSettings: ""
+      }
+      Game.create(params).exec(function(err, game) {
+        if (err) return res.send(500);
+        console.log(game, ' created');
+      })
+
     }
   };
 

@@ -205,6 +205,7 @@ io.socket.on('connect', function socketConnected() {
         $('#owner').val(window.me.id);
         var data = {};
         $('#dialog-form').serializeArray().map(function(x){data[x.name] = x.value;});
+        console.log(data);
         io.socket.post('/negotiate/create', data);
 
     });

@@ -55,8 +55,8 @@ function removeUser(user) {
 function updateUserList(users) {
     Object.keys(users).forEach(function(key, index) {
         var user = users[key];
-        if (user.id == window.me.id) {
-            return; }
+        // if (user.id == window.me.id) {
+        //     return; }
         addUser(user);
     }, users);
 }

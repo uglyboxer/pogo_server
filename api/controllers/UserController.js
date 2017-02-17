@@ -48,10 +48,8 @@ module.exports = {
                 username: user[0].username,
                 action: ' has logged in.'
             }, req);  // Don't tell the socket about itself
-            return res.send(user);
+            return res.send(user[0]);
         });
-
-
     },
 
     online: function(req, res) {
@@ -72,6 +70,5 @@ module.exports = {
             User.publishDestroy(userId, req);
             req.session.destroy();
         }
-
     }
 };

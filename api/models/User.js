@@ -8,7 +8,7 @@ var User = {
         passports: { collection: 'Passport', via: 'user' },
         rank: {
             type: 'integer',
-            default: 30
+            defaultsTo: 30
         },
         toJSON: function() {
             var obj = this.toObject();
@@ -17,7 +17,7 @@ var User = {
         },
 
         rooms: {
-            collection: 'room',
+            model: 'room',
             via: 'users',
             dominant: true
         },
@@ -27,8 +27,13 @@ var User = {
             via: 'owner',
         },
 
+        games: {
+          model: 'game',
+          via: 'games'
+        },
+
         loggedIn: 'boolean'
-    },
+    }
 };
 
 module.exports = User;
