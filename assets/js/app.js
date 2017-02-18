@@ -14,8 +14,7 @@ io.socket.on('connect', function socketConnected() {
 
     // Announce that a new user is online--in this somewhat contrived example,
     // this also causes the CREATION of the user, so each window/tab is a new user.
-    io.socket.get("/user/subscribe", function(data) {
-    });
+    io.socket.get("/user/subscribe", function(data) {});
 
     io.socket.get("/user/announce", function(data) {
         window.me = data;
@@ -85,7 +84,7 @@ io.socket.on('connect', function socketConnected() {
     // of the User model to see which messages will be broadcast by default
     // to subscribed sockets.
     io.socket.on('user', function messageReceived(message) {
-      console.log('find it', message);
+        console.log('find it', message);
         switch (message.verb) {
 
             // Handle user creation
@@ -121,7 +120,12 @@ io.socket.on('connect', function socketConnected() {
                 // User instance will get this message--see the onConnect logic in config/sockets.js
                 // to see where a new user gets subscribed to their own "message" context
             case 'messaged':
-                receivePrivateMessage(message.data);
+                console.log(message);
+                if (message.data.start) {
+                    io.socket.post('/game/join', { gameId: message.data.gameId });
+                } else {
+                    receivePrivateMessage(message.data);
+                }
                 break;
 
             default:
@@ -131,8 +135,8 @@ io.socket.on('connect', function socketConnected() {
     });
 
     io.socket.on('negotiate', function messageReceived(message) {
-      switch (message.verb) {
-                    // Handle negotiation creation
+        switch (message.verb) {
+            // Handle negotiation creation
             case 'created':
                 addNegotiation(message.data);
                 break;
@@ -204,7 +208,7 @@ io.socket.on('connect', function socketConnected() {
         event.preventDefault();
         $('#owner').val(window.me.id);
         var data = {};
-        $('#dialog-form').serializeArray().map(function(x){data[x.name] = x.value;});
+        $('#dialog-form').serializeArray().map(function(x) { data[x.name] = x.value; });
         console.log(data);
         io.socket.post('/negotiate/create', data);
 

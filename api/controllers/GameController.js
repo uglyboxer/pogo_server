@@ -15,16 +15,25 @@ module.exports = {
       Negotiate.publishDestroy(negotiation.negotiation_id);
       console.log(negotiation);
       params = {
-        black: negotiation.black,
-        white: negotiation.white,
+        black: negotiation.black.id,
+        white: negotiation.white.id,
         handicap: negotiation.handicap,
         timeSettings: ""
       }
       Game.create(params).exec(function(err, game) {
         if (err) return res.send(500);
-        console.log(game, ' created');
+        // subscribe the owner of the negotiation
+        Game.subscribe(req, game);
+        User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
+        res.send(200);
       })
 
+    },
+    join: function(req, res) {
+      // subscribe the challenger to the created game
+      var gameId = req.param('gameId');
+      Game.subscribe(req, gameId);
+      res.send(200);
     }
   };
 
