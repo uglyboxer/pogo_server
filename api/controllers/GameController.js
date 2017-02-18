@@ -6,7 +6,11 @@
  */
 
 module.exports = {
+
     initiate: function(req, res) {
+      var tenuki = require('../../lib/tenuki');
+      var game_obj = new tenuki.Game();
+      console.log('Do you even ', game_obj);
       var negotiation = req.param('negotiation');
       console.log(negotiation.black, ' is gonna play ', negotiation.white);
       Negotiate.destroy(negotiation.negotiation_id).exec(function(err) {
