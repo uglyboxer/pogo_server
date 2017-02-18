@@ -38,6 +38,19 @@ module.exports = {
       var gameId = req.param('gameId');
       Game.subscribe(req, gameId);
       res.send(200);
+    },
+
+    playedAt: function(data) {
+      var gameId = data.gameId;
+      var location = data.location;
+      var x = Number(location[0]);
+      var y = Number(location[1]);
+      var color = data.color;
+      Game.findOne({id: gameId}).exec(function(err, game) {
+        if (err) return res.send(500);
+        var result = game.gameObj.playAt(y, x, color);
+      });
+
     }
   };
 

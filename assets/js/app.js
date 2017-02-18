@@ -177,6 +177,17 @@ io.socket.on('connect', function socketConnected() {
                 break;
 
         }
+    });
+
+    io.socket.on('game', function messageReceived(message) {
+      switch (message.verb) {
+        case 'updated':
+            if (message.data.start) {
+              initiateGame();
+            } else {
+              renderMove(message.data);
+            }
+      }
     })
 
     // Add a click handler for the "Update name" button, allowing the user to update their name.
