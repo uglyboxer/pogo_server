@@ -28,6 +28,7 @@ module.exports = {
         if (err) return res.send(500);
         // subscribe the owner of the negotiation
         Game.subscribe(req, game);
+        // TODO publishCreate?  just notify owner....
         User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
         res.send(200);
       })
@@ -36,7 +37,9 @@ module.exports = {
     join: function(req, res) {
       // subscribe the challenger to the created game
       var gameId = req.param('gameId');
+      console.log(req.session.passport.user, ' joined game ', gameId);
       Game.subscribe(req, gameId);
+      Game.message(gameId, {start: true});
       res.send(200);
     },
 

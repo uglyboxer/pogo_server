@@ -181,12 +181,19 @@ io.socket.on('connect', function socketConnected() {
 
     io.socket.on('game', function messageReceived(message) {
       switch (message.verb) {
+        case 'created':
+            break;
+
         case 'updated':
-            if (message.data.start) {
-              initiateGame();
-            } else {
               renderMove(message.data);
+            break;
+
+        case 'messaged':
+            console.log('game says: ', message.data);
+            if (message.data.start) {
+              initiateGame(message.data);
             }
+            break;
       }
     })
 
