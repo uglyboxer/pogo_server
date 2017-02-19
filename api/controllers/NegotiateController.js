@@ -11,7 +11,7 @@ module.exports = {
             Negotiate.create(req.params.all()).exec(function(err, negotiation) {
                 if (err) return res.negotiate(err);
                 console.log('hi, ', negotiation);
-                Negotiate.subscribe(req, negotiation.id);
+                Negotiate.subscribe(req, negotiation.id, ['message']);
                 Negotiate.publishCreate(negotiation);
                 return res.send(200);
             })
@@ -36,8 +36,8 @@ module.exports = {
         // so it'll get notified whenever Room.message() is called
         // for this room.
 
-        // Negotiate.subscribe(req, negotiationId);
-        sails.sockets.join(req, negotiationId);
+        Negotiate.subscribe(req, negotiationId, ['message']);
+        // sails.sockets.join(req, negotiationId);
         User.findOne({ id: req.session.passport.user }).exec(function(err, user) {
 
             Negotiate.update(Number(negotiationId), { challenger: req.session.passport.user }).exec(function afterwards(err, updated) {

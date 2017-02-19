@@ -12,10 +12,7 @@ module.exports = {
       var gameObj = new tenuki.Game();
       var negotiation = req.param('negotiation');
       console.log(negotiation.black, ' is gonna play ', negotiation.white);
-      Negotiate.destroy(negotiation.negotiation_id).exec(function(err) {
-        if (err) {return res.send(500);}
-      });
-      Negotiate.publishDestroy(negotiation.negotiation_id);
+
       console.log(negotiation);
       params = {
         black: negotiation.black.id,
@@ -27,10 +24,16 @@ module.exports = {
       Game.create(params).exec(function(err, game) {
         if (err) return res.send(500);
         // subscribe the owner of the negotiation
-        Game.subscribe(req, game);
+        Game.subscribe(req, game, ['message']);
         // TODO publishCreate?  just notify owner....
-        User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
+        console.log('trying to reach ', negotiation.challenger);
+        Negotiate.message(negotiation.negotiation_id, {start: true, gameId: game.id}, req);
+        // User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
         res.send(200);
+        // Negotiate.destroy(negotiation.negotiation_id).exec(function(err) {
+        //   if (err) {return res.send(500);}
+        // });
+        // Negotiate.publishDestroy(negotiation.negotiation_id);
       })
 
     },
@@ -38,7 +41,7 @@ module.exports = {
       // subscribe the challenger to the created game
       var gameId = req.param('gameId');
       console.log(req.session.passport.user, ' joined game ', gameId);
-      Game.subscribe(req, gameId);
+      Game.subscribe(req, gameId, ['message']);
       Game.message(gameId, {start: true});
       res.send(200);
     },

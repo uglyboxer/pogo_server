@@ -120,9 +120,10 @@ io.socket.on('connect', function socketConnected() {
                 // User instance will get this message--see the onConnect logic in config/sockets.js
                 // to see where a new user gets subscribed to their own "message" context
             case 'messaged':
-                console.log(message);
+                console.log(message, ' I got this message');
                 if (message.data.start) {
-                    io.socket.post('/game/join', { gameId: message.data.gameId });
+                    // io.socket.post('/game/join', { gameId: message.data.gameId });
+                    // TODO Fix this or make it go away with limiting users subbed to negotiation?
                 } else {
                     receivePrivateMessage(message.data);
                 }
@@ -135,6 +136,7 @@ io.socket.on('connect', function socketConnected() {
     });
 
     io.socket.on('negotiate', function messageReceived(message) {
+        console.log('negotiate say ', message);
         switch (message.verb) {
             // Handle negotiation creation
             case 'created':
@@ -170,6 +172,9 @@ io.socket.on('connect', function socketConnected() {
                 // Room instance will get this message--see the "join" and "leave" methods of RoomController.js
                 // to see where a socket gets subscribed to a Room instance's "message" context.
             case 'messaged':
+                if (message.data.start) {
+                    io.socket.post('/game/join', { gameId: message.data.gameId });
+                }
                 receiveNogtiationMessage(message.data);
                 break;
 
