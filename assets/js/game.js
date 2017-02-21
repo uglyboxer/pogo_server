@@ -8,7 +8,33 @@ function initiateGame(data) {
     gameOptions: {
             boardSize: 19 //Number(boardSize)
         },
-  })
+        hooks: {
+            submitPlay: function(playedY, playedX, result) {
+                io.socket.post('played_at', { location: [playedX, playedY], room: currentRoom });
+                console.log(result);
+                result(true); // TODO Have server emit validation instead of just using true
+                //  emit('result_of_' + move_number + game_id)
+
+            },
+
+            submitMarkDeadAt: function(y, x, stones, result) {
+                // $.post("http://localhost:3000/mark-dead-at", { y: y, x: x }).done(function(data) {
+                //     result(data["result"]);
+                // }).fail(function() {
+                //     result(false);
+                // });
+            },
+
+            submitPass: function(result) {
+            //     $.post("http://localhost:3000/pass").done(function(data) {
+            //         result(data["result"]);
+            //     }).fail(function() {
+            //         result(false);
+            //     });
+            // }
+        }
+  }
+});
 }
 
 function renderMove(data) {
