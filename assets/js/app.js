@@ -173,6 +173,7 @@ io.socket.on('connect', function socketConnected() {
                 // to see where a socket gets subscribed to a Room instance's "message" context.
             case 'messaged':
                 if (message.data.start) {
+                    window.me.color = 'black'; //TODO unhardcode this
                     io.socket.post('/game/join', { gameId: message.data.gameId });
                 }
                 receiveNogtiationMessage(message.data);
@@ -198,6 +199,8 @@ io.socket.on('connect', function socketConnected() {
             if (message.data.start) {
               initiateGame(message.data);
             }
+            console.log('game id :', message.data);
+            window.me.gameId = message.data.gameId;
             break;
       }
     })

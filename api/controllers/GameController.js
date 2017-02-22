@@ -46,15 +46,22 @@ module.exports = {
       res.send(200);
     },
 
-    playedAt: function(data) {
+    playedAt: function(req, res) {
+      console.log(req.params.all());
+      var data = req.params.all();
       var gameId = data.gameId;
       var location = data.location;
       var x = Number(location[0]);
       var y = Number(location[1]);
-      var color = data.color;
+      var color = 'black'; // TODO get this from session variable
+      // TODO 2-22 Replace db call with global array LIVE_GAMES = {}
+      // Keyed by gameId
       Game.findOne({id: gameId}).exec(function(err, game) {
         if (err) return res.send(500);
-        var result = game.gameObj.playAt(y, x, color);
+        console.log('found game: ', game);
+        var result = game.gameState.playAt(y, x, color);
+        console.log(result);
+        return res.send(200);
       });
 
     }
