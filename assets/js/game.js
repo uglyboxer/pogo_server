@@ -10,7 +10,7 @@ function initiateGame(data) {
         },
         hooks: {
             submitPlay: function(playedY, playedX, result) {
-                io.socket.post('/game/playedAt', { location: [playedX, playedY], gameId: 52 });
+                io.socket.post('/game/playedAt', { location: [playedX, playedY], gameId: 63 }); // TOOD this hardcoded gameID, fixme
                 console.log(result);
                 result(true); // TODO Have server emit validation instead of just using true
                 //  emit('result_of_' + move_number + game_id)
