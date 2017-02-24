@@ -179,7 +179,10 @@ module.exports = {
         },
 
         isIllegalAt: function isIllegalAt(y, x) {
-
+            var Ruleset = require('../../lib/ruleset').default;
+            var ruleset = new Ruleset({
+              koRule: 'simple'  // koRule should be var
+            });
             return ruleset.isIllegal(y, x, this);
         },
 
