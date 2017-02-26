@@ -12,26 +12,25 @@ module.exports = {
         console.log(negotiation.black, ' is gonna play ', negotiation.white);
 
         console.log(negotiation);
-        var defaultParams = {
-            color: 'black', // handicapStones > 1 ? "black" : "white",
-            moveNumber: 0,
-            intersections: [], // Object.freeze(emptyPoints),
-            blackStonesCaptured: 0,
-            whiteStonesCaptured: 0,
-            whitePassStones: 0,
-            blackPassStones: 0,
-            boardSize: 19 // variable instead = boardSize
-        }
-        BoardState.create(defaultParams).exec(function(err, state) {
+        // var defaultParams = {
+        //     color: 'black', // handicapStones > 1 ? "black" : "white",
+        //     moveNumber: 0,
+        //     intersections: [], // Object.freeze(emptyPoints),
+        //     blackStonesCaptured: 0,
+        //     whiteStonesCaptured: 0,
+        //     whitePassStones: 0,
+        //     blackPassStones: 0,
+        //     boardSize: 19 // variable instead = boardSize
+        // }
+        // BoardState.create(defaultParams).exec(function(err, state) {
 
             params = {
                 black: negotiation.black.id,
                 white: negotiation.white.id,
                 handicap: negotiation.handicap,
                 timeSettings: "",
-                intialState: state,
+                // intialState: state,
             }
-            console.log(state, '<>');
 
             Game.create(params).exec(function(err, game) {
                 if (err) return res.send(500);
@@ -40,6 +39,7 @@ module.exports = {
                              scoring: "territory",  // TODO unhardcode
                              koRule: "simple",
                  });
+                console.log(game._ruleset.isIllegal(1,2));
                 // subscribe the owner of the negotiation
                 Game.subscribe(req, game, ['message']);
                 // TODO publishCreate?  just notify owner....
@@ -52,7 +52,7 @@ module.exports = {
                 // });
                 // Negotiate.publishDestroy(negotiation.negotiation_id);
             });
-        })
+        // })
     },
     join: function(req, res) {
         // subscribe the challenger to the created game

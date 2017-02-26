@@ -6,16 +6,18 @@
  */
 "use strict";
 
-var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function(obj) {
+    return typeof obj; } : function(obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
-var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
-  return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
-} : function (obj) {
-  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function(obj) {
+    return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+} : function(obj) {
+    return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
 };
 
 // var _domRenderer = require("./dom-renderer");
@@ -43,7 +45,7 @@ var _scorer = require("../../lib/scorer");
 var _scorer2 = _interopRequireDefault(_scorer);
 
 function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
+    return obj && obj.__esModule ? obj : { default: obj };
 }
 
 var VALID_GAME_OPTIONS = ["boardSize", "scoring", "handicapStones", "koRule", "komi", "_hooks", "fuzzyStonePlacement", "renderer", "freeHandicapPlacement"];
@@ -71,10 +73,10 @@ module.exports = {
             defaultsTo: 'Count if it means that much to you'
         },
 
-        _initialState: {
-            model: 'BoardState',
-            via: 'game'
-        },
+        // _initialState: {
+        //     model: 'BoardState',
+        //     via: 'game'
+        // },
 
         _moves: {
             type: 'array',
@@ -159,6 +161,8 @@ module.exports = {
             this._ruleset = new _ruleset2.default({
                 koRule: koRule
             });
+
+            console.log(this._ruleset, "<<<<d");
 
             if (this._freeHandicapPlacement) {
                 this._initialState = _boardState2.default._initialFor(boardSize, 0);
@@ -343,10 +347,8 @@ module.exports = {
         },
 
         isIllegalAt: function isIllegalAt(y, x) {
-            // var Ruleset = require('../../lib/ruleset').default;
-            // var ruleset = new Ruleset({
-            //     koRule: 'simple' // koRule should be var
-            // });
+            console.log(this, '<><><>');
+            console.log(this._scorer, '<><><>');
             return this._ruleset.isIllegal(y, x, this);
         },
 
