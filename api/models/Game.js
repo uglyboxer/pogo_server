@@ -4,6 +4,49 @@
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
+"use strict";
+
+var _typeof2 = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol" ? function (obj) {
+  return typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj === "undefined" ? "undefined" : _typeof2(obj);
+};
+
+// var _domRenderer = require("./dom-renderer");
+
+// var _domRenderer2 = _interopRequireDefault(_domRenderer);
+
+// var _svgRenderer = require("./svg-renderer");
+
+// var _svgRenderer2 = _interopRequireDefault(_svgRenderer);
+
+// var _nullRenderer = require("./null-renderer");
+
+// var _nullRenderer2 = _interopRequireDefault(_nullRenderer);
+
+var _boardState = require("../../lib/board-state");
+
+var _boardState2 = _interopRequireDefault(_boardState);
+
+var _ruleset = require("../../lib/ruleset");
+
+var _ruleset2 = _interopRequireDefault(_ruleset);
+
+var _scorer = require("../../lib/scorer");
+
+var _scorer2 = _interopRequireDefault(_scorer);
+
+function _interopRequireDefault(obj) {
+  return obj && obj.__esModule ? obj : { default: obj };
+}
+
+var VALID_GAME_OPTIONS = ["boardSize", "scoring", "handicapStones", "koRule", "komi", "_hooks", "fuzzyStonePlacement", "renderer", "freeHandicapPlacement"];
 
 module.exports = {
 
@@ -28,12 +71,15 @@ module.exports = {
             defaultsTo: 'Count if it means that much to you'
         },
 
-        initialState: {
+        _initialState: {
             model: 'BoardState',
             via: 'game'
         },
 
-        moves: { type: 'array' },
+        _moves: {
+            type: 'array',
+            defaultsTo: []
+        },
 
         deadPoints: { type: 'array' },
 
@@ -53,6 +99,124 @@ module.exports = {
 
         dateStarted: { type: 'datetime' },
         dateFinished: { type: 'datetime' },
+        _configureOptions: function _configureOptions() {
+            var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+                _ref$boardSize = _ref.boardSize,
+                boardSize = _ref$boardSize === undefined ? this._defaultBoardSize : _ref$boardSize,
+                _ref$komi = _ref.komi,
+                komi = _ref$komi === undefined ? 0 : _ref$komi,
+                _ref$handicapStones = _ref.handicapStones,
+                handicapStones = _ref$handicapStones === undefined ? 0 : _ref$handicapStones,
+                _ref$freeHandicapPlac = _ref.freeHandicapPlacement,
+                freeHandicapPlacement = _ref$freeHandicapPlac === undefined ? false : _ref$freeHandicapPlac,
+                _ref$scoring = _ref.scoring,
+                scoring = _ref$scoring === undefined ? this._defaultScoring : _ref$scoring,
+                _ref$koRule = _ref.koRule,
+                koRule = _ref$koRule === undefined ? this._defaultKoRule : _ref$koRule,
+                _ref$renderer = _ref.renderer,
+                renderer = _ref$renderer === undefined ? this._defaultRenderer : _ref$renderer;
+
+            if (typeof boardSize !== "number") {
+                throw new Error("Board size must be a number, but was: " + (typeof boardSize === "undefined" ? "undefined" : _typeof(boardSize)));
+            }
+
+            if (typeof handicapStones !== "number") {
+                throw new Error("Handicap stones must be a number, but was: " + (typeof boardSize === "undefined" ? "undefined" : _typeof(boardSize)));
+            }
+
+            if (handicapStones > 0 && boardSize !== 9 && boardSize !== 13 && boardSize !== 19) {
+                throw new Error("Handicap stones not supported on sizes other than 9x9, 13x13 and 19x19");
+            }
+
+            if (handicapStones < 0 || handicapStones === 1 || handicapStones > 9) {
+                throw new Error("Only 2 to 9 handicap stones are supported");
+            }
+
+            if (boardSize > 19) {
+                throw new Error("cannot generate a board size greater than 19");
+            }
+
+            this.boardSize = boardSize;
+            this.handicapStones = handicapStones;
+            this._freeHandicapPlacement = freeHandicapPlacement;
+
+            this._scorer = new _scorer2.default({
+                scoreBy: scoring,
+                komi: komi
+            });
+
+            this._rendererChoice = {
+                "dom": _domRenderer2.default,
+                "svg": _svgRenderer2.default
+            }[renderer];
+
+            if (!this._rendererChoice) {
+                throw new Error("Unknown renderer: " + renderer);
+            }
+
+            this._whiteMustPassLast = this._scorer.usingPassStones();
+
+            this._ruleset = new _ruleset2.default({
+                koRule: koRule
+            });
+
+            if (this._freeHandicapPlacement) {
+                this._initialState = _boardState2.default._initialFor(boardSize, 0);
+            } else {
+                this._initialState = _boardState2.default._initialFor(boardSize, handicapStones);
+            }
+        },
+
+        _stillPlayingHandicapStones: function _stillPlayingHandicapStones() {
+            return this._freeHandicapPlacement && this.handicapStones > 0 && this._moves.length < this.handicapStones;
+        },
+
+        setup: function setup() {
+            var _this = this;
+
+            var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+            for (var key in options) {
+                if (options.hasOwnProperty(key) && VALID_GAME_OPTIONS.indexOf(key) < 0) {
+                    throw new Error("Unrecognized game option: " + key);
+                }
+            }
+
+            this._configureOptions(options);
+
+            if (this._boardElement) {
+                var defaultRendererHooks = {
+                    handleClick: function handleClick(y, x) {
+                        if (_this.isOver()) {
+                            _this.toggleDeadAt(y, x);
+                        } else {
+                            _this.playAt(y, x);
+                        }
+                    },
+
+                    hoverValue: function hoverValue(y, x) {
+                        if (!_this.isOver() && !_this.isIllegalAt(y, x)) {
+                            return _this.currentPlayer();
+                        }
+                    },
+
+                    gameIsOver: function gameIsOver() {
+                        return _this.isOver();
+                    }
+                };
+
+                this.renderer = new this._rendererChoice(this._boardElement, {
+                    hooks: options["_hooks"] || defaultRendererHooks,
+                    options: {
+                        fuzzyStonePlacement: options["fuzzyStonePlacement"]
+                    }
+                });
+            } else {
+                this.renderer = new _nullRenderer2.default();
+            }
+
+            this.render();
+        },
 
         intersectionAt: function intersectionAt(y, x) {
             return this.currentState().intersectionAt(y, x);
@@ -179,10 +343,10 @@ module.exports = {
         },
 
         isIllegalAt: function isIllegalAt(y, x) {
-            var Ruleset = require('../../lib/ruleset').default;
-            var ruleset = new Ruleset({
-              koRule: 'simple'  // koRule should be var
-            });
+            // var Ruleset = require('../../lib/ruleset').default;
+            // var ruleset = new Ruleset({
+            //     koRule: 'simple' // koRule should be var
+            // });
             return ruleset.isIllegal(y, x, this);
         },
 

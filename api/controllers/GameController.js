@@ -35,6 +35,8 @@ module.exports = {
 
             Game.create(params).exec(function(err, game) {
                 if (err) return res.send(500);
+
+                game.setup({ boardSize: 19 }); // TODO unhardcode Number(data['boardsize']) })
                 // subscribe the owner of the negotiation
                 Game.subscribe(req, game, ['message']);
                 // TODO publishCreate?  just notify owner....
