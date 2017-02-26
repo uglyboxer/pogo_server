@@ -97,6 +97,10 @@ module.exports = {
             defaultsTo: 0
         },
 
+        boardSize: {
+          type: 'integer'
+        },
+
         result: { type: 'string' },
 
         dateStarted: { type: 'datetime' },
@@ -139,9 +143,9 @@ module.exports = {
             }
 
             this.boardSize = boardSize;
+            console.log('Setting bsize to ', boardSize);
             this.handicapStones = handicapStones;
             this._freeHandicapPlacement = freeHandicapPlacement;
-            console.log('first score ', scoring);
             this._scorer = new _scorer2.default({
                 scoreBy: scoring,
                 komi: komi
@@ -162,13 +166,12 @@ module.exports = {
                 koRule: koRule
             });
 
-            console.log(this._ruleset, "<<<<d");
-
             if (this._freeHandicapPlacement) {
                 this._initialState = _boardState2.default._initialFor(boardSize, 0);
             } else {
                 this._initialState = _boardState2.default._initialFor(boardSize, handicapStones);
             }
+            console.log(typeof(this._ruleset), 'obj type <<');
         },
 
         _stillPlayingHandicapStones: function _stillPlayingHandicapStones() {
@@ -176,6 +179,7 @@ module.exports = {
         },
 
         setup: function setup() {
+            console.log('bc called');
             var _this = this;
 
             var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -273,6 +277,8 @@ module.exports = {
         },
 
         playAt: function playAt(y, x) {
+          console.log(this._scorer, "where the hell are we?");
+          console.log(this.boardSize, "where the hell are we?");
             if (this.isIllegalAt(y, x)) {
                 return false;
             }
@@ -348,8 +354,9 @@ module.exports = {
 
         isIllegalAt: function isIllegalAt(y, x) {
             console.log(this, '<><><>');
-            console.log(this._scorer, '<><><>');
-            return this._ruleset.isIllegal(y, x, this);
+            console.log(this.playAt, '><><><');
+            console.log(this._ruleset.isIllegal(y, x, this), 'a><><><a');
+            return this._ruleset.isIllegal(y, x, this)
         },
 
         territory: function territory() {

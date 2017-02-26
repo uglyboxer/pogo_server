@@ -29,6 +29,9 @@ module.exports = {
                 white: negotiation.white.id,
                 handicap: negotiation.handicap,
                 timeSettings: "",
+                 boardSize: 19, // TODO unhardcode Number(data['boardsize']) })
+               scoring: "territory",  // TODO unhardcode
+               koRule: "simple",
                 // intialState: state,
             }
 
@@ -39,7 +42,7 @@ module.exports = {
                              scoring: "territory",  // TODO unhardcode
                              koRule: "simple",
                  });
-                console.log(game._ruleset.isIllegal(1,2));
+                // console.log(game.isIllegalAt(2,1), 'outside test');
                 // subscribe the owner of the negotiation
                 Game.subscribe(req, game, ['message']);
                 // TODO publishCreate?  just notify owner....
