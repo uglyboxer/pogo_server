@@ -139,20 +139,20 @@ module.exports = {
             this.boardSize = boardSize;
             this.handicapStones = handicapStones;
             this._freeHandicapPlacement = freeHandicapPlacement;
-
+            console.log('first score ', scoring);
             this._scorer = new _scorer2.default({
                 scoreBy: scoring,
                 komi: komi
             });
 
-            this._rendererChoice = {
-                "dom": _domRenderer2.default,
-                "svg": _svgRenderer2.default
-            }[renderer];
+            // this._rendererChoice = {
+            //     "dom": _domRenderer2.default,
+            //     "svg": _svgRenderer2.default
+            // }[renderer];
 
-            if (!this._rendererChoice) {
-                throw new Error("Unknown renderer: " + renderer);
-            }
+            // if (!this._rendererChoice) {
+            //     throw new Error("Unknown renderer: " + renderer);
+            // }
 
             this._whiteMustPassLast = this._scorer.usingPassStones();
 
@@ -184,38 +184,38 @@ module.exports = {
 
             this._configureOptions(options);
 
-            if (this._boardElement) {
-                var defaultRendererHooks = {
-                    handleClick: function handleClick(y, x) {
-                        if (_this.isOver()) {
-                            _this.toggleDeadAt(y, x);
-                        } else {
-                            _this.playAt(y, x);
-                        }
-                    },
+            // if (this._boardElement) {
+            //     var defaultRendererHooks = {
+            //         handleClick: function handleClick(y, x) {
+            //             if (_this.isOver()) {
+            //                 _this.toggleDeadAt(y, x);
+            //             } else {
+            //                 _this.playAt(y, x);
+            //             }
+            //         },
 
-                    hoverValue: function hoverValue(y, x) {
-                        if (!_this.isOver() && !_this.isIllegalAt(y, x)) {
-                            return _this.currentPlayer();
-                        }
-                    },
+            //         hoverValue: function hoverValue(y, x) {
+            //             if (!_this.isOver() && !_this.isIllegalAt(y, x)) {
+            //                 return _this.currentPlayer();
+            //             }
+            //         },
 
-                    gameIsOver: function gameIsOver() {
-                        return _this.isOver();
-                    }
-                };
+            //         gameIsOver: function gameIsOver() {
+            //             return _this.isOver();
+            //         }
+            //     };
 
-                this.renderer = new this._rendererChoice(this._boardElement, {
-                    hooks: options["_hooks"] || defaultRendererHooks,
-                    options: {
-                        fuzzyStonePlacement: options["fuzzyStonePlacement"]
-                    }
-                });
-            } else {
-                this.renderer = new _nullRenderer2.default();
-            }
+            //     this.renderer = new this._rendererChoice(this._boardElement, {
+            //         hooks: options["_hooks"] || defaultRendererHooks,
+            //         options: {
+            //             fuzzyStonePlacement: options["fuzzyStonePlacement"]
+            //         }
+            //     });
+            // } else {
+            //     this.renderer = new _nullRenderer2.default();
+            // }
 
-            this.render();
+            // this.render();
         },
 
         intersectionAt: function intersectionAt(y, x) {
@@ -347,7 +347,7 @@ module.exports = {
             // var ruleset = new Ruleset({
             //     koRule: 'simple' // koRule should be var
             // });
-            return ruleset.isIllegal(y, x, this);
+            return this._ruleset.isIllegal(y, x, this);
         },
 
         territory: function territory() {

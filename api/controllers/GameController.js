@@ -29,14 +29,17 @@ module.exports = {
                 white: negotiation.white.id,
                 handicap: negotiation.handicap,
                 timeSettings: "",
-                intialState: state
+                intialState: state,
             }
-            console.log(state);
+            console.log(state, '<>');
 
             Game.create(params).exec(function(err, game) {
                 if (err) return res.send(500);
 
-                game.setup({ boardSize: 19 }); // TODO unhardcode Number(data['boardsize']) })
+                game.setup({ boardSize: 19, // TODO unhardcode Number(data['boardsize']) })
+                             scoring: "territory",  // TODO unhardcode
+                             koRule: "simple",
+                 });
                 // subscribe the owner of the negotiation
                 Game.subscribe(req, game, ['message']);
                 // TODO publishCreate?  just notify owner....
