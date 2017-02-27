@@ -4,7 +4,7 @@
  * @description :: Server-side logic for managing Games
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-
+var games = {};
 module.exports = {
 
     initiate: function(req, res) {
@@ -42,11 +42,12 @@ module.exports = {
                              scoring: "territory",  // TODO unhardcode
                              koRule: "simple",
                  });
+                games[String(game.id)] = game;
                 // console.log(game.isIllegalAt(2,1), 'outside test');
                 // subscribe the owner of the negotiation
                 Game.subscribe(req, game, ['message']);
                 // TODO publishCreate?  just notify owner....
-                console.log('trying to reach ', negotiation.challenger);
+                console.log('trying to reach ', negotiation.challenger, ' with game ', game.id);
                 Negotiate.message(negotiation.negotiation_id, { start: true, gameId: game.id }, req);
                 // User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
                 res.send(200);
@@ -62,7 +63,7 @@ module.exports = {
         var gameId = req.param('gameId');
         console.log(req.session.passport.user, ' joined game ', gameId);
         Game.subscribe(req, gameId, ['message']);
-        Game.message(gameId, { start: true });
+        Game.message(gameId, { start: true, gameId: gameId });
         res.send(200);
     },
 
@@ -76,9 +77,10 @@ module.exports = {
         var color = 'black'; // TODO get this from session variable
         // TODO 2-22 Replace db call with global array LIVE_GAMES = {}
         // Keyed by gameId
-        Game.findOne({ id: gameId }).exec(function(err, game) {
+        Game.findOne({ id: gameId }).exec(function(err, gameRecord) {
             if (err) return res.send(500);
-            console.log('found game: ', game);
+            console.log('found game: ', gameRecord);
+            var game = games[String(gameRecord.id)];
             var result = game.playAt(y, x);
             console.log(result);
             return res.send(200);

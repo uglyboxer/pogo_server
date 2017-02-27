@@ -3,6 +3,7 @@ function initiateGame(data) {
   var player = 'black' // get from session and/or data
   var boardElement = document.querySelector(".tenuki-board");
   var client = new tenuki.Client(boardElement);
+  console.log(data.gameId, ' thinkin');
   client.setup({
     player: player,
     gameOptions: {
@@ -10,7 +11,7 @@ function initiateGame(data) {
         },
         hooks: {
             submitPlay: function(playedY, playedX, result) {
-                io.socket.post('/game/playedAt', { location: [playedX, playedY], gameId: 63 }); // TOOD this hardcoded gameID, fixme
+                io.socket.post('/game/playedAt', { location: [playedX, playedY], gameId: data.gameId }); // TOOD this hardcoded gameID, fixme
                 console.log(result);
                 result(true); // TODO Have server emit validation instead of just using true
                 //  emit('result_of_' + move_number + game_id)
