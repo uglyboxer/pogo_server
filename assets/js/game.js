@@ -1,13 +1,13 @@
 function initiateGame(data) {
-  console.log('Launching board');
-  var player = 'black' // get from session and/or data
-  var boardElement = document.querySelector(".tenuki-board");
-  var client = new tenuki.Client(boardElement);
-  console.log(data.gameId, ' thinkin');
-  client.setup({
-    player: player,
-    gameOptions: {
-            boardSize: 19 //Number(boardSize)
+    console.log('Launching board');
+    var player = window.me.color;
+    var activeColor = window.me.activeColor;
+    var boardElement = document.querySelector(".tenuki-board");
+    var client = new tenuki.Client(boardElement);
+    client.setup({
+        player: player,
+        gameOptions: {
+            boardSize: 19 // TODO from data (not currently sent): Number(boardSize)
         },
         hooks: {
             submitPlay: function(playedY, playedX, result) {
@@ -27,17 +27,22 @@ function initiateGame(data) {
             },
 
             submitPass: function(result) {
-            //     $.post("http://localhost:3000/pass").done(function(data) {
-            //         result(data["result"]);
-            //     }).fail(function() {
-            //         result(false);
-            //     });
-            // }
+                //     $.post("http://localhost:3000/pass").done(function(data) {
+                //         result(data["result"]);
+                //     }).fail(function() {
+                //         result(false);
+                //     });
+                // }
+            }
         }
-  }
-});
+    });
+    window.me.client = client;
 }
 
 function renderMove(data) {
-  console.log('Rendering move at: ', data);
+    console.log('Rendering move at: ', data);
+    var client = window.me.client;
+    var y = data['playedY'];
+    var x = data['playedX'];
+    client.receivePlay(y, x);
 }

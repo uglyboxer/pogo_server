@@ -73,11 +73,6 @@ module.exports = {
             defaultsTo: 'Count if it means that much to you'
         },
 
-        // _initialState: {
-        //     model: 'BoardState',
-        //     via: 'game'
-        // },
-
         _moves: {
             type: 'array',
             defaultsTo: []
@@ -95,10 +90,6 @@ module.exports = {
         whiteCaptured: {
             type: 'integer',
             defaultsTo: 0
-        },
-
-        boardSize: {
-          type: 'integer'
         },
 
         result: { type: 'string' },
@@ -143,7 +134,6 @@ module.exports = {
             }
 
             this.boardSize = boardSize;
-            console.log('Setting bsize to ', boardSize);
             this.handicapStones = handicapStones;
             this._freeHandicapPlacement = freeHandicapPlacement;
             this._scorer = new _scorer2.default({
@@ -171,7 +161,6 @@ module.exports = {
             } else {
                 this._initialState = _boardState2.default._initialFor(boardSize, handicapStones);
             }
-            console.log(typeof(this._ruleset), 'obj type <<');
         },
 
         _stillPlayingHandicapStones: function _stillPlayingHandicapStones() {
@@ -179,7 +168,6 @@ module.exports = {
         },
 
         setup: function setup() {
-            console.log('bc called');
             var _this = this;
 
             var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -189,41 +177,7 @@ module.exports = {
                     throw new Error("Unrecognized game option: " + key);
                 }
             }
-
             this._configureOptions(options);
-
-            // if (this._boardElement) {
-            //     var defaultRendererHooks = {
-            //         handleClick: function handleClick(y, x) {
-            //             if (_this.isOver()) {
-            //                 _this.toggleDeadAt(y, x);
-            //             } else {
-            //                 _this.playAt(y, x);
-            //             }
-            //         },
-
-            //         hoverValue: function hoverValue(y, x) {
-            //             if (!_this.isOver() && !_this.isIllegalAt(y, x)) {
-            //                 return _this.currentPlayer();
-            //             }
-            //         },
-
-            //         gameIsOver: function gameIsOver() {
-            //             return _this.isOver();
-            //         }
-            //     };
-
-            //     this.renderer = new this._rendererChoice(this._boardElement, {
-            //         hooks: options["_hooks"] || defaultRendererHooks,
-            //         options: {
-            //             fuzzyStonePlacement: options["fuzzyStonePlacement"]
-            //         }
-            //     });
-            // } else {
-            //     this.renderer = new _nullRenderer2.default();
-            // }
-
-            // this.render();
         },
 
         intersectionAt: function intersectionAt(y, x) {
@@ -277,8 +231,6 @@ module.exports = {
         },
 
         playAt: function playAt(y, x) {
-          console.log(this._scorer, "where the hell are we?");
-          console.log(this.boardSize, "where the hell are we?");
             if (this.isIllegalAt(y, x)) {
                 return false;
             }
@@ -353,9 +305,6 @@ module.exports = {
         },
 
         isIllegalAt: function isIllegalAt(y, x) {
-            console.log(this, '<><><>');
-            console.log(this.playAt, '><><><');
-            console.log(this._ruleset.isIllegal(y, x, this), 'a><><><a');
             return this._ruleset.isIllegal(y, x, this)
         },
 

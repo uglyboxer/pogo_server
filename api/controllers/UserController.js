@@ -54,7 +54,6 @@ module.exports = {
 
     online: function(req, res) {
         User.find({loggedIn: true}).exec(function(err, users) {
-          console.log('found em, ', users);
         return res.send(users);
         })
     },

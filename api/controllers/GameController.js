@@ -9,53 +9,39 @@ module.exports = {
 
     initiate: function(req, res) {
         var negotiation = req.param('negotiation');
-        console.log(negotiation.black, ' is gonna play ', negotiation.white);
 
         console.log(negotiation);
-        // var defaultParams = {
-        //     color: 'black', // handicapStones > 1 ? "black" : "white",
-        //     moveNumber: 0,
-        //     intersections: [], // Object.freeze(emptyPoints),
-        //     blackStonesCaptured: 0,
-        //     whiteStonesCaptured: 0,
-        //     whitePassStones: 0,
-        //     blackPassStones: 0,
-        //     boardSize: 19 // variable instead = boardSize
-        // }
-        // BoardState.create(defaultParams).exec(function(err, state) {
+        params = {
+            black: negotiation.black.id,
+            white: negotiation.white.id,
+            handicap: negotiation.handicap,
+            timeSettings: "",
+            boardSize: 19, // TODO unhardcode Number(data['boardsize']) })
+        }
 
-            params = {
-                black: negotiation.black.id,
-                white: negotiation.white.id,
-                handicap: negotiation.handicap,
-                timeSettings: "",
-                 boardSize: 19, // TODO unhardcode Number(data['boardsize']) })
-               scoring: "territory",  // TODO unhardcode
-               koRule: "simple",
-                // intialState: state,
-            }
+        Game.create(params).exec(function(err, game) {
+            if (err) return res.send(500);
 
-            Game.create(params).exec(function(err, game) {
-                if (err) return res.send(500);
-
-                game.setup({ boardSize: 19, // TODO unhardcode Number(data['boardsize']) })
-                             scoring: "territory",  // TODO unhardcode
-                             koRule: "simple",
-                 });
-                games[String(game.id)] = game;
-                // console.log(game.isIllegalAt(2,1), 'outside test');
-                // subscribe the owner of the negotiation
-                Game.subscribe(req, game, ['message']);
-                // TODO publishCreate?  just notify owner....
-                console.log('trying to reach ', negotiation.challenger, ' with game ', game.id);
-                Negotiate.message(negotiation.negotiation_id, { start: true, gameId: game.id }, req);
-                // User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
-                res.send(200);
-                // Negotiate.destroy(negotiation.negotiation_id).exec(function(err) {
-                //   if (err) {return res.send(500);}
-                // });
-                // Negotiate.publishDestroy(negotiation.negotiation_id);
+            game.setup({
+                boardSize: 19, // TODO unhardcode Number(data['boardsize']) })
+                scoring: "territory", // TODO unhardcode
+                koRule: "simple",
             });
+            games[String(game.id)] = game;
+            // subscribe the owner of the negotiation
+            Game.subscribe(req, game, ['message']);
+            // TODO publishCreate?  just notify owner....
+            // TODO leave below in until sure only one game happening per negotiation
+            console.log('trying to reach ', negotiation.challenger, ' with game ', game.id);
+            Negotiate.message(negotiation.negotiation_id, { start: true, gameId: game.id }, req);
+            // User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
+            res.send(200);
+            // TODO handle below
+            // Negotiate.destroy(negotiation.negotiation_id).exec(function(err) {
+            //   if (err) {return res.send(500);}
+            // });
+            // Negotiate.publishDestroy(negotiation.negotiation_id);
+        });
         // })
     },
     join: function(req, res) {
@@ -63,7 +49,9 @@ module.exports = {
         var gameId = req.param('gameId');
         console.log(req.session.passport.user, ' joined game ', gameId);
         Game.subscribe(req, gameId, ['message']);
-        Game.message(gameId, { start: true, gameId: gameId });
+        Game.findOne({ id: gameId }).exec(function(err, game) {
+            Game.message(gameId, { start: true, gameId: gameId, black: game.black });
+        });
         res.send(200);
     },
 
@@ -74,15 +62,12 @@ module.exports = {
         var location = data.location;
         var x = Number(location[0]);
         var y = Number(location[1]);
-        var color = 'black'; // TODO get this from session variable
-        // TODO 2-22 Replace db call with global array LIVE_GAMES = {}
-        // Keyed by gameId
         Game.findOne({ id: gameId }).exec(function(err, gameRecord) {
             if (err) return res.send(500);
-            console.log('found game: ', gameRecord);
             var game = games[String(gameRecord.id)];
             var result = game.playAt(y, x);
             console.log(result);
+            Game.message(gameId, {gameId: gameId, location:{ playedY: y, playedX: x }}, req)
             return res.send(200);
         });
 
