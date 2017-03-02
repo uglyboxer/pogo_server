@@ -30,9 +30,7 @@ var User = {
         games: {
           model: 'game',
           via: 'games'
-        },
-
-        loggedIn: 'boolean'
+        }
     }
 };
 
