@@ -19,11 +19,14 @@ function updateOpenNegotiations(negotiations) {
 }
 
 function showNegotiation(data) {
+  console.log('data this far: ', data);
   $('#negotiation-window').show();
   $('#black-player-name').empty();
   $('#black-player-name').text(data.black.username);
   $('#white-player-name').empty();
   $('#white-player-name').text(data.white.username);
+  $('#board-size-value').empty();
+  $('#board-size-value').text(data.boardsize);
   if (data.owner === window.me.id) {
     $('#accept').prop('disabled', false);
     $('.approve-buttons').show();

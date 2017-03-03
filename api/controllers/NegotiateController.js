@@ -63,6 +63,7 @@ module.exports = {
                         owner: owner.id,
                         black: lowerRank,
                         white: higherRank,
+                        boardsize: updated[0].board_size,
                         challenger: req.session.passport.user
                     });
                 });

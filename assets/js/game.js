@@ -7,7 +7,7 @@ function initiateGame(data) {
     client.setup({
         player: player,
         gameOptions: {
-            boardSize: 19 // TODO from data (not currently sent): Number(boardSize)
+            boardSize: data.boardsize // TODO from data (not currently sent): Number(boardSize)
         },
         hooks: {
             submitPlay: function(playedY, playedX, result) {

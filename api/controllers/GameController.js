@@ -9,21 +9,21 @@ module.exports = {
 
     initiate: function(req, res) {
         var negotiation = req.param('negotiation');
-
+        // TODO should get this from database based on id, not from user
         console.log(negotiation);
         params = {
             black: negotiation.black.id,
             white: negotiation.white.id,
             handicap: negotiation.handicap,
             timeSettings: "",
-            boardSize: 19, // TODO unhardcode Number(data['boardsize']) })
+            boardsize: Number(negotiation.boardsize), // TODO unhardcode Number(data['boardsize']) })
         }
 
         Game.create(params).exec(function(err, game) {
             if (err) return res.send(500);
 
             game.setup({
-                boardSize: 19, // TODO unhardcode Number(data['boardsize']) })
+                boardSize: params['boardsize'], // TODO unhardcode Number(data['boardsize']) })
                 scoring: "territory", // TODO unhardcode
                 koRule: "simple",
             });
@@ -33,7 +33,8 @@ module.exports = {
             // TODO publishCreate?  just notify owner....
             // TODO leave below in until sure only one game happening per negotiation
             console.log('trying to reach ', negotiation.challenger, ' with game ', game.id);
-            Negotiate.message(negotiation.negotiation_id, { start: true, gameId: game.id }, req);
+            console.log(params.boardsize, 'prolly undefined');
+            Negotiate.message(negotiation.negotiation_id, { start: true, gameId: game.id , boardsize: params.boardsize}, req);
             // User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
             res.send(200);
             // TODO handle below
@@ -50,7 +51,7 @@ module.exports = {
         console.log(req.session.passport.user, ' joined game ', gameId);
         Game.subscribe(req, gameId, ['message']);
         Game.findOne({ id: gameId }).exec(function(err, game) {
-            Game.message(gameId, { start: true, gameId: gameId, black: game.black });
+            Game.message(gameId, { start: true, gameId: gameId, black: game.black, boardsize: game.boardsize});
         });
         res.send(200);
     },

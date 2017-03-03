@@ -82,6 +82,8 @@ module.exports = {
 
         gameState: { type: 'json' },
 
+        boardsize: { type: 'integer' },
+
         blackCaptured: {
             type: 'integer',
             defaultsTo: 0
