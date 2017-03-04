@@ -34,7 +34,7 @@ module.exports = {
             // TODO leave below in until sure only one game happening per negotiation
             console.log('trying to reach ', negotiation.challenger, ' with game ', game.id);
             console.log(params.boardsize, 'prolly undefined');
-            Negotiate.message(negotiation.negotiation_id, { start: true, gameId: game.id , boardsize: params.boardsize}, req);
+            Negotiate.message(negotiation.negotiation_id, { start: true, gameId: game.id, boardsize: params.boardsize }, req);
             // User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
             res.send(200);
             // TODO handle below
@@ -51,7 +51,7 @@ module.exports = {
         console.log(req.session.passport.user, ' joined game ', gameId);
         Game.subscribe(req, gameId, ['message']);
         Game.findOne({ id: gameId }).exec(function(err, game) {
-            Game.message(gameId, { start: true, gameId: gameId, black: game.black, boardsize: game.boardsize});
+            Game.message(gameId, { start: true, gameId: gameId, black: game.black, boardsize: game.boardsize });
         });
         res.send(200);
     },
@@ -67,9 +67,16 @@ module.exports = {
             if (err) return res.send(500);
             var game = games[String(gameRecord.id)];
             var result = game.playAt(y, x);
-            console.log(result);
-            Game.message(gameId, {gameId: gameId, location:{ playedY: y, playedX: x }}, req)
-            return res.send(200);
+            if (result) {
+                gameRecord._moves.push(location);
+                gameRecord.gameState = game.currentState();
+                // TODO update each field
+                gameRecord.save();
+                Game.message(gameId, { gameId: gameId, location: { playedY: y, playedX: x } }, req)
+                return res.send(200);
+            } else {
+                return res.send(500);
+            }
         });
 
     }
