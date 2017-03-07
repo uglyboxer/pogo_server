@@ -205,6 +205,8 @@ io.socket.on('game', function messageReceived(message) {
                     console.log('Im playing white, see? ', window.me.color);
                 }
                 initiateGame(message.data);
+            } else if (message.data.pass) {
+              renderPass();
             }
 
             window.me.gameId = message.data.gameId;

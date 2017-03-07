@@ -79,5 +79,26 @@ module.exports = {
             }
         });
 
-    }
+    },
+        pass: function(req, res) {
+        console.log(req.params.all());
+        var data = req.params.all();
+        var gameId = data.gameId;
+        Game.findOne({ id: gameId }).exec(function(err, gameRecord) {
+            if (err) return res.send(500);
+            var game = games[String(gameRecord.id)];
+            var result = game.pass();
+            if (result) {
+                gameRecord.moves.push("p");
+                gameRecord.gameState = game.currentState();
+                // TODO update each field
+                gameRecord.save();
+                Game.message(gameId, { gameId: gameId, pass: true }, req)
+                return res.send(200);
+            } else {
+                return res.send(500);
+            }
+        });
+
+    },
 };

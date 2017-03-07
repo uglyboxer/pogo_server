@@ -11,7 +11,7 @@ function initiateGame(data) {
         },
         hooks: {
             submitPlay: function(playedY, playedX, result) {
-                io.socket.post('/game/playedAt', { location: [playedX, playedY], gameId: data.gameId }); // TOOD this hardcoded gameID, fixme
+                io.socket.post('/game/playedAt', { location: [playedX, playedY], gameId: data.gameId });
                 console.log(result);
                 result(true); // TODO Have server emit validation instead of just using true
                 //  emit('result_of_' + move_number + game_id)
@@ -27,6 +27,9 @@ function initiateGame(data) {
             },
 
             submitPass: function(result) {
+              io.socket.post('/game/pass', { gameId: data.gameId });
+                console.log(result);
+                result(true);
                 //     $.post("http://localhost:3000/pass").done(function(data) {
                 //         result(data["result"]);
                 //     }).fail(function() {
@@ -46,3 +49,14 @@ function renderMove(data) {
     var x = data['playedX'];
     client.receivePlay(y, x);
 }
+
+function renderPass() {
+    var client = window.me.client;
+    client.receivePass();
+}
+
+// Gonna do this in example-controls (rename) instead
+// function submitPass() {
+//     var client = window.me.client;
+//     client.hooks.submitPass();
+// }
