@@ -73,7 +73,7 @@ module.exports = {
             defaultsTo: 'Count if it means that much to you'
         },
 
-        _moves: {
+        moves: {
             type: 'array',
             defaultsTo: []
         },
@@ -135,6 +135,7 @@ module.exports = {
                 throw new Error("cannot generate a board size greater than 19");
             }
 
+            this._moves = Array();
             this.boardSize = boardSize;
             this.handicapStones = handicapStones;
             this._freeHandicapPlacement = freeHandicapPlacement;

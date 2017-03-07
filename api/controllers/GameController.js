@@ -68,7 +68,7 @@ module.exports = {
             var game = games[String(gameRecord.id)];
             var result = game.playAt(y, x);
             if (result) {
-                gameRecord._moves.push(location);
+                gameRecord.moves.push(location);
                 gameRecord.gameState = game.currentState();
                 // TODO update each field
                 gameRecord.save();
