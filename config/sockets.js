@@ -126,7 +126,9 @@ module.exports.sockets = {
         // Remove all negotiation instances and publishDestroy them
         // Then remove the instance of the User with publishDestroy
         // so other clients will remove them from the list.
-        User.findOne({id: session.passport.user}).populate('negotiations').exec(function(err, user) {
+        var userPass = session.passport;
+        if (userPass) {
+        User.findOne({id: userPass.user}).populate('negotiations').exec(function(err, user) {
           user.negotiations.forEach(function(n){
                 Negotiate.destroy(n.id).exec(function(err, destroyed) {
                   console.log(destroyed);
@@ -135,6 +137,7 @@ module.exports.sockets = {
           })
         })
         User.publishDestroy(session.passport.user);
+      }
         return cb();
     },
 
