@@ -1,3 +1,5 @@
+/*global Game, Negotiate*/
+"use strict";
 /**
  * GameController
  *
@@ -8,19 +10,21 @@ var games = {};
 module.exports = {
 
     initiate: function(req, res) {
-        var negotiation = req.param('negotiation');
-        // TODO should get this from database based on id, not from user
+        var negotiation = req.param('negotiation'),
+            // TODO should get this from database based on id, not from user
+            params = {
+                black: negotiation.black.id,
+                white: negotiation.white.id,
+                handicap: negotiation.handicap,
+                timeSettings: "",
+                boardsize: Number(negotiation.boardsize), // TODO unhardcode Number(data['boardsize']) })
+            };
         console.log(negotiation);
-        params = {
-            black: negotiation.black.id,
-            white: negotiation.white.id,
-            handicap: negotiation.handicap,
-            timeSettings: "",
-            boardsize: Number(negotiation.boardsize), // TODO unhardcode Number(data['boardsize']) })
-        }
 
-        Game.create(params).exec(function(err, game) {
-            if (err) return res.send(500);
+        Game.create(params).exec(function (err, game) {
+            if (err) {
+                return res.send(500);
+            }
 
             game.setup({
                 boardSize: params['boardsize'], // TODO unhardcode Number(data['boardsize']) })
@@ -45,49 +49,55 @@ module.exports = {
         });
         // })
     },
-    join: function(req, res) {
+    join: function (req, res) {
         // subscribe the challenger to the created game
         var gameId = req.param('gameId');
         console.log(req.session.passport.user, ' joined game ', gameId);
         Game.subscribe(req, gameId, ['message']);
-        Game.findOne({ id: gameId }).exec(function(err, game) {
+        Game.findOne({ id: gameId }).exec(function (err, game) {
+            if (err) {
+                return res.send(500);
+            }
             Game.message(gameId, { start: true, gameId: gameId, black: game.black, boardsize: game.boardsize });
         });
         res.send(200);
     },
 
-    playedAt: function(req, res) {
+    playedAt: function (req, res) {
         console.log(req.params.all());
-        var data = req.params.all();
-        var gameId = data.gameId;
-        var location = data.location;
-        var x = Number(location[0]);
-        var y = Number(location[1]);
-        Game.findOne({ id: gameId }).exec(function(err, gameRecord) {
-            if (err) return res.send(500);
-            var game = games[String(gameRecord.id)];
-            var result = game.playAt(y, x);
+        var data = req.params.all(),
+            gameId = data.gameId,
+            location = data.location,
+            x = Number(location[0]),
+            y = Number(location[1]);
+        Game.findOne({ id: gameId }).exec(function (err, gameRecord) {
+            if (err) {
+                return res.send(500);
+            }
+            var game = games[String(gameRecord.id)],
+                result = game.playAt(y, x);
             if (result) {
                 gameRecord.moves.push(location);
                 gameRecord.gameState = game.currentState();
                 // TODO update each field
                 gameRecord.save();
-                Game.message(gameId, { gameId: gameId, location: { playedY: y, playedX: x } }, req)
+                Game.message(gameId, { gameId: gameId, location: { playedY: y, playedX: x } }, req);
                 return res.send(200);
-            } else {
-                return res.send(500);
             }
+            return res.send(500);
         });
 
     },
-        pass: function(req, res) {
+    pass: function(req, res) {
         console.log(req.params.all());
-        var data = req.params.all();
-        var gameId = data.gameId;
-        Game.findOne({ id: gameId }).exec(function(err, gameRecord) {
-            if (err) return res.send(500);
-            var game = games[String(gameRecord.id)];
-            var result = game.pass();
+        var data = req.params.all(),
+            gameId = data.gameId;
+        Game.findOne({ id: gameId }).exec(function (err, gameRecord) {
+            if (err) {
+                return res.send(500);
+            }
+            var game = games[String(gameRecord.id)],
+                result = game.pass();
             if (result) {
                 gameRecord.moves.push("p");
                 gameRecord.gameState = game.currentState();
@@ -95,9 +105,8 @@ module.exports = {
                 gameRecord.save();
                 Game.message(gameId, { gameId: gameId, pass: true }, req)
                 return res.send(200);
-            } else {
-                return res.send(500);
             }
+            return res.send(500);
         });
 
     },

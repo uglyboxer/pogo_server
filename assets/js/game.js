@@ -1,16 +1,22 @@
+/*global window,
+         document,
+         io,
+         tenuki*/
+"use strict";
+
 function initiateGame(data) {
     console.log('Launching board');
-    var player = window.me.color;
-    var activeColor = window.me.activeColor;
-    var boardElement = document.querySelector(".tenuki-board");
-    var client = new tenuki.Client(boardElement);
+    var player = window.me.color,
+        activeColor = window.me.activeColor,
+        boardElement = document.querySelector(".tenuki-board"),
+        client = new tenuki.Client(boardElement);
     client.setup({
         player: player,
         gameOptions: {
             boardSize: data.boardsize // TODO from data (not currently sent): Number(boardSize)
         },
         hooks: {
-            submitPlay: function(playedY, playedX, result) {
+            submitPlay: function (playedY, playedX, result) {
                 io.socket.post('/game/playedAt', { location: [playedX, playedY], gameId: data.gameId });
                 console.log(result);
                 result(true); // TODO Have server emit validation instead of just using true
@@ -18,7 +24,7 @@ function initiateGame(data) {
 
             },
 
-            submitMarkDeadAt: function(y, x, stones, result) {
+            submitMarkDeadAt: function (y, x, stones, result) {
                 // $.post("http://localhost:3000/mark-dead-at", { y: y, x: x }).done(function(data) {
                 //     result(data["result"]);
                 // }).fail(function() {
@@ -26,8 +32,8 @@ function initiateGame(data) {
                 // });
             },
 
-            submitPass: function(result) {
-              io.socket.post('/game/pass', { gameId: data.gameId });
+            submitPass: function (result) {
+                io.socket.post('/game/pass', { gameId: data.gameId });
                 console.log(result);
                 result(true);
                 //     $.post("http://localhost:3000/pass").done(function(data) {
@@ -44,9 +50,9 @@ function initiateGame(data) {
 
 function renderMove(data) {
     console.log('Rendering move at: ', data);
-    var client = window.me.client;
-    var y = data['playedY'];
-    var x = data['playedX'];
+    var client = window.me.client,
+        y = data.playedY,
+        x = data.playedX;
     client.receivePlay(y, x);
 }
 
