@@ -206,11 +206,13 @@ io.socket.on('game', function messageReceived(message) {
                 }
                 initiateGame(message.data);
             } else if (message.data.pass) {
+              console.log('got pass');
               renderPass();
-            }
+            } else {
 
             window.me.gameId = message.data.gameId;
             renderMove(message.data.location);
+          }
             break;
     }
 })

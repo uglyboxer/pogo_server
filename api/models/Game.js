@@ -254,7 +254,7 @@ module.exports = {
             var newState = this.currentState().playPass(this.currentPlayer());
             this._moves.push(newState);
 
-            this.render();
+            // this.render();
 
             return true;
         },

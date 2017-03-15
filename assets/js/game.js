@@ -35,7 +35,7 @@ function initiateGame(data) {
             submitPass: function (result) {
                 io.socket.post('/game/pass', { gameId: data.gameId });
                 console.log(result);
-                result(true);
+                // result(true);
                 //     $.post("http://localhost:3000/pass").done(function(data) {
                 //         result(data["result"]);
                 //     }).fail(function() {
@@ -46,6 +46,7 @@ function initiateGame(data) {
         }
     });
     window.me.client = client;
+    window.me.controls = new ExampleGameControls(boardElement, client);
 }
 
 function renderMove(data) {
@@ -53,6 +54,7 @@ function renderMove(data) {
     var client = window.me.client,
         y = data.playedY,
         x = data.playedX;
+    console.log('getting move', client._busy);
     client.receivePlay(y, x);
 }
 
@@ -61,8 +63,9 @@ function renderPass() {
     client.receivePass();
 }
 
-// Gonna do this in example-controls (rename) instead
-// function submitPass() {
-//     var client = window.me.client;
-//     client.hooks.submitPass();
-// }
+function submitPass() {
+    var client = window.me.client;
+    client.pass();
+    client._hooks.submitPass();
+    console.log(client._busy);
+}
