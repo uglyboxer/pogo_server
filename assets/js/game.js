@@ -9,6 +9,7 @@ function initiateGame(data) {
     var player = window.me.color,
         activeColor = window.me.activeColor,
         boardElement = document.querySelector(".tenuki-board"),
+        controlElement = document.querySelector(".controls"),
         client = new tenuki.Client(boardElement);
     client.setup({
         player: player,
@@ -46,7 +47,6 @@ function initiateGame(data) {
         }
     });
     window.me.client = client;
-    var controlElement = document.querySelector(".controls");
     window.me.controls = new ExampleGameControls(controlElement, client._game);
     window.me.controls.setup();
 }
