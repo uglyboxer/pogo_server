@@ -1,3 +1,7 @@
+/*global io,
+         window,
+         $*/
+"use strict";
 /**
  * app.js
  *
@@ -176,7 +180,7 @@ io.socket.on('connect', function socketConnected() {
 
                         io.socket.post('/game/join', { gameId: message.data.gameId });
                     }
-                    receiveNogtiationMessage(message.data);
+                    // receiveNegotiationMessage(message.data);
                     break;
 
                 default:

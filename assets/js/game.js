@@ -46,7 +46,9 @@ function initiateGame(data) {
         }
     });
     window.me.client = client;
-    window.me.controls = new ExampleGameControls(boardElement, client);
+    var controlElement = document.querySelector(".controls");
+    window.me.controls = new ExampleGameControls(controlElement, client._game);
+    window.me.controls.setup();
 }
 
 function renderMove(data) {
@@ -54,18 +56,13 @@ function renderMove(data) {
     var client = window.me.client,
         y = data.playedY,
         x = data.playedX;
-    console.log('getting move', client._busy);
+    console.log('current busy status: ', client._busy);
     client.receivePlay(y, x);
+    window.me.controls.updateStats();
 }
 
 function renderPass() {
     var client = window.me.client;
     client.receivePass();
-}
-
-function submitPass() {
-    var client = window.me.client;
-    client.pass();
-    client._hooks.submitPass();
-    console.log(client._busy);
+    window.me.controls.updateStats();
 }
