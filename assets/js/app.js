@@ -212,6 +212,9 @@ io.socket.on('game', function messageReceived(message) {
             } else if (message.data.pass) {
               console.log('got pass');
               renderPass();
+            } else if (message.data.toggleDead) {
+              console.log('dealing the hurt');
+              renderToggleDead(message.data.location);
             } else {
 
             window.me.gameId = message.data.gameId;

@@ -88,6 +88,32 @@ module.exports = {
         });
 
     },
+    markDeadAt: function (req, res) {
+        console.log(req.params.all());
+        var data = req.params.all(),
+            gameId = data.gameId,
+            location = data.location,
+            x = Number(location[0]),
+            y = Number(location[1]),
+            stones = data.stones;
+        Game.findOne({ id: gameId }).exec(function (err, gameRecord) {
+            if (err) {
+                return res.send(500);
+            }
+            var game = games[String(gameRecord.id)];
+            game.toggleDeadAt(y, x);
+            if (true) { // TODO true shoud instead be result fo toggleDead function
+                gameRecord.moves.push(location);
+                gameRecord.gameState = game.currentState();
+                // TODO update each field
+                gameRecord.save();
+                Game.message(gameId, { gameId: gameId, toggleDead: true, location: { playedY: y, playedX: x } }, req);
+                return res.send(200);
+            }
+            return res.send(500);
+        });
+
+    },
     pass: function(req, res) {
         console.log(req.params.all());
         var data = req.params.all(),

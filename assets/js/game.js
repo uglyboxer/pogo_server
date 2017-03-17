@@ -26,6 +26,8 @@ function initiateGame(data) {
             },
 
             submitMarkDeadAt: function (y, x, stones, result) {
+                io.socket.post('/game/markDeadAt', { location: [y, x], stones: stones, gameId: data.gameId });
+                result(true); // TODO Fix the hardcode
                 // $.post("http://localhost:3000/mark-dead-at", { y: y, x: x }).done(function(data) {
                 //     result(data["result"]);
                 // }).fail(function() {
@@ -65,4 +67,15 @@ function renderPass() {
     var client = window.me.client;
     client.receivePass();
     window.me.controls.updateStats();
+    console.log(client._game.isOver());
+}
+
+function renderToggleDead(location) {
+    var client = window.me.client;
+    var y = location[0],
+        x = location[1];
+    client._game.hooks.handleClick(y, x);
+    // TODO make sure this ins't cycling back to server again
+    window.me.controls.updateStats();
+    console.log(client._game.isOver());
 }
