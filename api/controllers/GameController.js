@@ -102,6 +102,7 @@ module.exports = {
             }
             var game = games[String(gameRecord.id)];
             game.toggleDeadAt(y, x);
+            // TODO When both players mark some dead, the game will flip back to alive, need to validate agreement
             if (true) { // TODO true shoud instead be result fo toggleDead function
                 gameRecord.moves.push(location);
                 gameRecord.gameState = game.currentState();

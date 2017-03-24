@@ -44,7 +44,9 @@ module.exports = {
         //     if (err) return next(err);
         // });
         User.findOne({ id: userId }).exec(function(err, user) {
-        sails.config.globals.loggedInUsers[socketId] = user; // TODO strip down details stored here
+        sails.config.globals.loggedInUsers[user.id] = {socket: socketId, username: user.username}; // TODO strip down details stored here
+        console.log(sails.config.globals.loggedInUsers);
+        console.log('yo, these peeps');
             User.publishUpdate(userId, {
                 loggedIn: true,
                 id: userId,
@@ -71,7 +73,7 @@ module.exports = {
         if (req.isSocket) {
             var userId = req.session.passport.user;
             var socketId = sails.sockets.getId(req);
-            delete sails.config.globals.loggedInUsers.socketId;
+            delete sails.config.globals.loggedInUsers[userId];
             // User.update({id: userId}, {loggedIn: false}).exec(function(err){
             //   if (err) {
             //     return res.send(500);
