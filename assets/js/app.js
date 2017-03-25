@@ -15,7 +15,6 @@ io.socket.on('connect', function socketConnected() {
     // Show the main UI
     $('#disconnect').hide();
     $('#main').show();
-
     // Announce that a new user is online--in this somewhat contrived example,
     // this also causes the CREATION of the user, so each window/tab is a new user.
     io.socket.get("/user/subscribe", function(data) {});
