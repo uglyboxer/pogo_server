@@ -19,7 +19,6 @@ module.exports = {
                 timeSettings: "",
                 boardsize: Number(negotiation.boardsize), // TODO unhardcode Number(data['boardsize']) })
             };
-        console.log(negotiation);
 
         Game.create(params).exec(function (err, game) {
             if (err) {
@@ -52,7 +51,6 @@ module.exports = {
     join: function (req, res) {
         // subscribe the challenger to the created game
         var gameId = req.param('gameId');
-        console.log(req.session.passport.user, ' joined game ', gameId);
         Game.subscribe(req, gameId, ['message']);
         Game.findOne({ id: gameId }).exec(function (err, game) {
             if (err) {
@@ -64,7 +62,6 @@ module.exports = {
     },
 
     playedAt: function (req, res) {
-        console.log(req.params.all());
         var data = req.params.all(),
             gameId = data.gameId,
             location = data.location,
@@ -89,7 +86,6 @@ module.exports = {
 
     },
     markDeadAt: function (req, res) {
-        console.log(req.params.all());
         var data = req.params.all(),
             gameId = data.gameId,
             location = data.location,
@@ -116,7 +112,6 @@ module.exports = {
 
     },
     pass: function(req, res) {
-        console.log(req.params.all());
         var data = req.params.all(),
             gameId = data.gameId;
         Game.findOne({ id: gameId }).exec(function (err, gameRecord) {
