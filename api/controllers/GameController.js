@@ -56,6 +56,7 @@ module.exports = {
             if (err) {
                 return res.send(500);
             }
+            console.log('sending ... ', game.black);
             Game.message(gameId, { start: true, gameId: gameId, black: game.black, boardsize: game.boardsize });
         });
         res.send(200);

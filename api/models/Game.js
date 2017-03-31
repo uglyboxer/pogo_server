@@ -94,6 +94,9 @@ module.exports = {
             defaultsTo: 0
         },
 
+        active: { type: 'boolean',
+                  defaultsTo: true },
+
         result: { type: 'string' },
 
         dateStarted: { type: 'datetime' },

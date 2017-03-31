@@ -4,10 +4,22 @@
          tenuki*/
 "use strict";
 
+function determineColor(blackId) {
+      if (blackId === window.me.id) {
+        window.me.color = 'black';
+        console.log('Im playing black, see? ', window.me.color);
+        return 'black';
+    } else {
+        window.me.color = 'white';
+        console.log('Im playing white, see? ', window.me.color);
+        return 'white';
+    }
+
+}
+
 function initiateGame(data) {
     console.log('Launching board');
-    var player = window.me.color,
-        activeColor = window.me.activeColor,
+    var player = determineColor(data.black),
         boardElement = document.querySelector(".tenuki-board"),
         controlElement = document.querySelector(".controls"),
         client = new tenuki.Client(boardElement);

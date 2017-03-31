@@ -53,7 +53,28 @@ module.exports = {
                 username: user.username,
                 action: ' has logged in.'
             });
-            return res.send(user);
+            Game.find({ active: true,
+                        or: [{ black: userId },
+                             { white: userId }]
+                      }).exec(function(err, games) {
+                        if (err) {
+                          console.log(err);
+                          return res.send(500);
+                        } else if (games.length > 0) {
+                          Game.subscribe(req, games, ['message']);
+                          // This only will work for one active game at a time, for now.
+                          var game = games[0];
+                          return res.send({ user: user,
+                                            rejoin: true,
+                                            start: true,
+                                            gameId: game.id,
+                                            boardsize: game.boardsize,
+                                            black: game.black });
+                        } else {
+
+                          return res.send({ user: user });
+                      }
+                    });
           });
     },
 
