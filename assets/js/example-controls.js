@@ -58,7 +58,7 @@ ExampleGameControls = function(element, game) {
 
     passButton.addEventListener("click", function(e) {
       e.preventDefault();
-
+      window.me.client._hooks.submitPass();
       controls.game.pass();
     });
 

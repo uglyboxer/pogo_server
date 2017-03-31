@@ -1,3 +1,7 @@
+/*global io,
+         window,
+         $*/
+"use strict";
 /**
  * app.js
  *
@@ -11,13 +15,14 @@ io.socket.on('connect', function socketConnected() {
     // Show the main UI
     $('#disconnect').hide();
     $('#main').show();
-
     // Announce that a new user is online--in this somewhat contrived example,
     // this also causes the CREATION of the user, so each window/tab is a new user.
     io.socket.get("/user/subscribe", function(data) {});
 
     io.socket.get("/user/announce", function(data) {
-        window.me = data;
+        window.me = {};
+        console.log('showin back up', data);
+        window.me.id = data.user.id;
         // updateMyName(data);
 
         // Get the current list of users online.  This will also subscribe us to
@@ -29,6 +34,13 @@ io.socket.on('connect', function socketConnected() {
         io.socket.get('/user/online', updateUserList);
         io.socket.get('/room', updateRoomList);
         io.socket.get('/negotiate/open', updateOpenNegotiations);
+        if (data.rejoin) {
+          console.log('here we go again', data);
+          initiateGame({ gameId: data.gameId,
+                         boardsize: data.boardsize,
+                         black: data.black });
+          rollGameForward(data.gameId);
+        }
     });
 
     // Listen for the "room" event, which will be broadcast when something
@@ -176,7 +188,7 @@ io.socket.on('connect', function socketConnected() {
 
                         io.socket.post('/game/join', { gameId: message.data.gameId });
                     }
-                    receiveNogtiationMessage(message.data);
+                    // receiveNegotiationMessage(message.data);
                     break;
 
                 default:
@@ -197,18 +209,18 @@ io.socket.on('game', function messageReceived(message) {
         case 'messaged':
             console.log('game says: ', message.data);
             if (message.data.start) {
-                if (message.data.black === window.me.id) {
-                    window.me.color = 'black';
-                    console.log('Im playing black, see? ', window.me.color);
-                } else {
-                    window.me.color = 'white';
-                    console.log('Im playing white, see? ', window.me.color);
-                }
                 initiateGame(message.data);
-            }
+            } else if (message.data.pass) {
+              console.log('got pass');
+              renderPass();
+            } else if (message.data.toggleDead) {
+              console.log('dealing the hurt');
+              renderToggleDead(message.data.location);
+            } else {
 
             window.me.gameId = message.data.gameId;
             renderMove(message.data.location);
+          }
             break;
     }
 })

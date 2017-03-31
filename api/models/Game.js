@@ -94,6 +94,9 @@ module.exports = {
             defaultsTo: 0
         },
 
+        active: { type: 'boolean',
+                  defaultsTo: true },
+
         result: { type: 'string' },
 
         dateStarted: { type: 'datetime' },
@@ -254,7 +257,7 @@ module.exports = {
             var newState = this.currentState().playPass(this.currentPlayer());
             this._moves.push(newState);
 
-            this.render();
+            // this.render();
 
             return true;
         },
