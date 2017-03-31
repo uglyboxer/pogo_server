@@ -68,6 +68,7 @@ module.exports = {
             location = data.location,
             x = Number(location[0]),
             y = Number(location[1]);
+            console.log(data, 'rejoing player');
         Game.findOne({ id: gameId }).exec(function (err, gameRecord) {
             if (err) {
                 return res.send(500);

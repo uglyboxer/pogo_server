@@ -65,6 +65,10 @@ function initiateGame(data) {
     window.me.controls.setup();
 }
 
+function rollGameForward(gameId) {
+
+}
+
 function renderMove(data) {
     console.log('Rendering move at: ', data);
     var client = window.me.client,

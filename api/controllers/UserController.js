@@ -5,6 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
+"use strict";
+
 module.exports = {
 
     /**
@@ -14,12 +16,20 @@ module.exports = {
 
     subscribe: function(req, res) {
         if (req.isSocket) {
-            User.find().exec(function(err, users) {
+            User.find().exec(function (err, users) {
+                if (err) {
+                    console.log(err);
+                    return res.send(500);
+                }
                 User.subscribe(req, users);
                 User.watch(req);
 
             });
-            Room.find().exec(function(err, rooms) {
+            Room.find().exec(function (err, rooms) {
+                if (err) {
+                    console.log(err);
+                    return res.send(500);
+                }
                 Room.subscribe(req, rooms);
                 Room.watch(req);
             });
@@ -36,10 +46,11 @@ module.exports = {
     announce: function(req, res) {
 
         // Get the socket ID from the reauest
-        var socketId = sails.sockets.getId(req);
+        var socketId = sails.sockets.getId(req),
         // Get the session from the request
-        var session = req.session;
-        var userId = session.passport.user;
+            session = req.session,
+            userId = session.passport.user;
+        console.log('session looks like: ', session);
         // User.update({ id: userId }, {loggedIn: true}).exec(function(err, user) {
         //     if (err) return next(err);
         // });
@@ -56,7 +67,7 @@ module.exports = {
             Game.find({ active: true,
                         or: [{ black: userId },
                              { white: userId }]
-                      }).exec(function(err, games) {
+                      }).exec(function (err, games) {
                         if (err) {
                           console.log(err);
                           return res.send(500);
@@ -71,7 +82,6 @@ module.exports = {
                                             boardsize: game.boardsize,
                                             black: game.black });
                         } else {
-
                           return res.send({ user: user });
                       }
                     });
@@ -85,12 +95,13 @@ module.exports = {
 
     logout: function(req, res) {
         if (req.isSocket) {
-            var userId = req.session.passport.user;
-            var socketId = sails.sockets.getId(req);
+            var userId = req.session.passport.user,
+                socketId = sails.sockets.getId(req);
             delete sails.config.globals.loggedInUsers[userId];
 
             User.publishDestroy(userId, req);
             req.session.destroy();
+            req.logout();
         }
     }
 };

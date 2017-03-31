@@ -39,6 +39,7 @@ io.socket.on('connect', function socketConnected() {
           initiateGame({ gameId: data.gameId,
                          boardsize: data.boardsize,
                          black: data.black });
+          rollGameForward(data.gameId);
         }
     });
 
