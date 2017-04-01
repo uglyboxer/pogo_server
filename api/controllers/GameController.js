@@ -33,10 +33,7 @@ module.exports = {
             games[String(game.id)] = game;
             // subscribe the owner of the negotiation
             Game.subscribe(req, game, ['message']);
-            // TODO publishCreate?  just notify owner....
-            // TODO leave below in until sure only one game happening per negotiation
             Negotiate.message(negotiation.negotiation_id, { start: true, gameId: game.id, boardsize: params.boardsize });
-            // User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
             res.send(200);
             // TODO handle below
             // Negotiate.destroy(negotiation.negotiation_id).exec(function(err) {
@@ -54,8 +51,6 @@ module.exports = {
             if (err) {
                 return res.send(500);
             }
-            console.log('sending ... ', game.black);
-            // Game.message(gameId, { start: true, gameId: gameId, black: game.black, boardsize: game.boardsize });
             return res.send({ start: true, gameId: gameId, black: game.black, boardsize: game.boardsize });
         });
     },
