@@ -53,6 +53,7 @@ function removeUser(user) {
 
 // Add multiple users to the users list.
 function updateUserList(users) {
+    console.log('to prove val is passed ', users);
     Object.keys(users).forEach(function(key, index) {
         var user = users[key];
         // if (user.id == window.me.id) {

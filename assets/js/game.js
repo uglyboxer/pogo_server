@@ -70,9 +70,9 @@ function rollGameForward(gameId, moves) {
     console.log(loc);
     console.log('move x');
     var client = window.me.client,
-        y = loc[0],
-        x = loc[1];
-    client.receivePlay(y, x);
+        x = loc[0],
+        y = loc[1];
+    client._game.playAt(y, x);
     window.me.controls.updateStats();
 
   });

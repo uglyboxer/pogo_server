@@ -186,7 +186,7 @@ io.socket.on('connect', function socketConnected() {
                 case 'messaged':
                     if (message.data.start) {
 
-                        io.socket.post('/game/join', { gameId: message.data.gameId });
+                        io.socket.post('/game/join', { gameId: message.data.gameId }, initiateGame);
                     }
                     // receiveNegotiationMessage(message.data);
                     break;
@@ -203,7 +203,7 @@ io.socket.on('game', function messageReceived(message) {
             break;
 
         case 'updated':
-            renderMove(message.data);
+            // renderMove(message.data);
             break;
 
         case 'messaged':
