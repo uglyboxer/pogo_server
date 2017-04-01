@@ -1,3 +1,4 @@
+/*global User, Game, Room, Negotiate, sails*/
 /**
  * UserController
  *
@@ -14,7 +15,7 @@ module.exports = {
      */
 
 
-    subscribe: function(req, res) {
+    subscribe: function (req, res) {
         if (req.isSocket) {
             User.find().exec(function (err, users) {
                 if (err) {
@@ -79,6 +80,7 @@ module.exports = {
                                             rejoin: true,
                                             start: true,
                                             gameId: game.id,
+                                            moves: game.moves,
                                             boardsize: game.boardsize,
                                             black: game.black });
                         } else {

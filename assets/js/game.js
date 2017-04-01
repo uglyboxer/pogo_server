@@ -65,8 +65,17 @@ function initiateGame(data) {
     window.me.controls.setup();
 }
 
-function rollGameForward(gameId) {
+function rollGameForward(gameId, moves) {
+    moves.forEach(function (loc) {
+    console.log(loc);
+    console.log('move x');
+    var client = window.me.client,
+        x = loc[0],
+        y = loc[1];
+    client._game.playAt(y, x);
+    window.me.controls.updateStats();
 
+  });
 }
 
 function renderMove(data) {

@@ -33,12 +33,7 @@ module.exports = {
             games[String(game.id)] = game;
             // subscribe the owner of the negotiation
             Game.subscribe(req, game, ['message']);
-            // TODO publishCreate?  just notify owner....
-            // TODO leave below in until sure only one game happening per negotiation
-            console.log('trying to reach ', negotiation.challenger, ' with game ', game.id);
-            console.log(params.boardsize, 'prolly undefined');
-            Negotiate.message(negotiation.negotiation_id, { start: true, gameId: game.id, boardsize: params.boardsize }, req);
-            // User.message(negotiation.challenger, {start: true, gameId: game.id}, req);
+            Negotiate.message(negotiation.negotiation_id, { start: true, gameId: game.id, boardsize: params.boardsize });
             res.send(200);
             // TODO handle below
             // Negotiate.destroy(negotiation.negotiation_id).exec(function(err) {
@@ -56,10 +51,8 @@ module.exports = {
             if (err) {
                 return res.send(500);
             }
-            console.log('sending ... ', game.black);
-            Game.message(gameId, { start: true, gameId: gameId, black: game.black, boardsize: game.boardsize });
+            return res.send({ start: true, gameId: gameId, black: game.black, boardsize: game.boardsize });
         });
-        res.send(200);
     },
 
     playedAt: function (req, res) {
@@ -68,7 +61,6 @@ module.exports = {
             location = data.location,
             x = Number(location[0]),
             y = Number(location[1]);
-            console.log(data, 'rejoing player');
         Game.findOne({ id: gameId }).exec(function (err, gameRecord) {
             if (err) {
                 return res.send(500);
