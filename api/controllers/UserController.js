@@ -51,7 +51,6 @@ module.exports = {
         // Get the session from the request
             session = req.session,
             userId = session.passport.user;
-        console.log('session looks like: ', session);
         // User.update({ id: userId }, {loggedIn: true}).exec(function(err, user) {
         //     if (err) return next(err);
         // });

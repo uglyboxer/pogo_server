@@ -35,7 +35,6 @@ io.socket.on('connect', function socketConnected() {
         io.socket.get('/room', updateRoomList);
         io.socket.get('/negotiate/open', updateOpenNegotiations);
         if (data.rejoin) {
-          console.log('here we go again', data);
           initiateGame({ gameId: data.gameId,
                          boardsize: data.boardsize,
                          black: data.black });

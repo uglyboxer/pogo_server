@@ -19,7 +19,6 @@ function updateOpenNegotiations(negotiations) {
 }
 
 function showNegotiation(data) {
-  console.log('data this far: ', data);
   $('#negotiation-window').show();
   $('#black-player-name').empty();
   $('#black-player-name').text(data.black.username);
